@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Dana Kovach](https://up.htmlacademy.ru/ecmascript/11/user/834173).
-* Наставник: `Неизвестно`.
+* Наставник: [Dana Kovach](https://up.htmlacademy.ru/ecmascript/11/user/834173).
 
 ---
 

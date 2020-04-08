@@ -9,7 +9,7 @@ import {createMostCommentedTemplate} from "./components/most-commented";
 import {createFilmPopupTemplate} from "./components/film-popup";
 import {createFiltersTemplate} from "./components/filters";
 import {films} from "./mock/film-card";
-import {CARDS_COUNT, CARDS_COUNT_SPECIAL} from "./consts";
+import {CARDS_COUNT, CARDS_COUNT_SPECIAL, CARDS_COUNT_DEFAULT, CARDS_COUNT_BY_BUTTON} from "./consts";
 import {filters} from "./mock/filters";
 
 const render = (container, template, place) => {
@@ -30,7 +30,9 @@ const filmsElement = siteMainElement.querySelector(`.films`);
 const filmListElement = filmsElement.querySelector(`.films-list`);
 const filmListContainerElement = filmListElement.querySelector(`.films-list__container`);
 
-films.slice(0, CARDS_COUNT)
+let showingFilmsCount = CARDS_COUNT_DEFAULT;
+
+films.slice(0, showingFilmsCount)
   .forEach((film) => render(filmListContainerElement, createFilmCardTemplate(film), `beforeend`));
 
 render(filmListElement, createShowMoreButton(), `beforeend`);
@@ -41,6 +43,20 @@ const footerStatisticElement = footerElement.querySelector(`.footer__statistics`
 render(footerStatisticElement, createFooterStatisticTemplate(), `beforeend`);
 
 // render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
+
+const showMoreButton = filmListElement.querySelector(`.films-list__show-more`);
+
+showMoreButton.addEventListener(`click`, () => {
+  const prevFilmsCount = showingFilmsCount;
+  showingFilmsCount = showingFilmsCount + CARDS_COUNT_BY_BUTTON;
+
+  films.slice(prevFilmsCount, showingFilmsCount)
+    .forEach((film) => render(filmListContainerElement, createFilmCardTemplate(film), `beforeend`));
+
+  if (showingFilmsCount > films.length) {
+    showMoreButton.remove();
+  }
+});
 
 render(filmsElement, createTopRatedTemplate(), `beforeend`);
 render(filmsElement, createMostCommentedTemplate(), `beforeend`);

@@ -7,9 +7,8 @@ import {createFooterStatisticTemplate} from "./components/footer-statistic";
 import {createTopRatedTemplate} from "./components/top-rated";
 import {createMostCommentedTemplate} from "./components/most-commented";
 import {createFilmPopupTemplate} from "./components/film-popup";
-
-const CARDS_COUNT = 5;
-const CARDS_COUNT_SPECIAL = 2;
+import {films} from "./mock/film-card";
+import {CARDS_COUNT, CARDS_COUNT_SPECIAL} from "./consts";
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -26,9 +25,8 @@ const filmsElement = siteMainElement.querySelector(`.films`);
 const filmListElement = filmsElement.querySelector(`.films-list`);
 const filmListContainerElement = filmListElement.querySelector(`.films-list__container`);
 
-for (let i = 0; i < CARDS_COUNT; i++) {
-  render(filmListContainerElement, createFilmCardTemplate(), `beforeend`);
-}
+films.slice(0, CARDS_COUNT)
+  .forEach((film) => render(filmListContainerElement, createFilmCardTemplate(film), `beforeend`));
 
 render(filmListElement, createShowMoreButton(), `beforeend`);
 
@@ -36,21 +34,20 @@ const footerElement = document.querySelector(`.footer`);
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 
 render(footerStatisticElement, createFooterStatisticTemplate(), `beforeend`);
+
+// render(footerElement, createFilmPopupTemplate(), `afterend`);
+
 render(filmsElement, createTopRatedTemplate(), `beforeend`);
 render(filmsElement, createMostCommentedTemplate(), `beforeend`);
 
 const filmsTopRatedElement = filmsElement.querySelector(`.films-list--extra`);
 const filmsTopRatedContainerElement = filmsTopRatedElement.querySelector(`.films-list__container`);
 
-for (let i = 0; i < CARDS_COUNT_SPECIAL; i++) {
-  render(filmsTopRatedContainerElement, createFilmCardTemplate(), `beforeend`);
-}
+films.slice(0, CARDS_COUNT_SPECIAL)
+  .forEach((film) => render(filmsTopRatedContainerElement, createFilmCardTemplate(film), `beforeend`));
 
 const filmsMostCommentedElement = filmsElement.querySelector(`.films-list--extra:last-of-type`);
 const filmsMostCommentedContainerElement = filmsMostCommentedElement.querySelector(`.films-list__container`);
 
-for (let i = 0; i < CARDS_COUNT_SPECIAL; i++) {
-  render(filmsMostCommentedContainerElement, createFilmCardTemplate(), `beforeend`);
-}
-
-render(footerElement, createFilmPopupTemplate(), `afterend`);
+films.slice(0, CARDS_COUNT_SPECIAL)
+  .forEach((film) => render(filmsMostCommentedContainerElement, createFilmCardTemplate(film), `beforeend`));

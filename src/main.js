@@ -35,7 +35,7 @@ const footerStatisticElement = footerElement.querySelector(`.footer__statistics`
 
 render(footerStatisticElement, createFooterStatisticTemplate(), `beforeend`);
 
-// render(footerElement, createFilmPopupTemplate(), `afterend`);
+render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
 
 render(filmsElement, createTopRatedTemplate(), `beforeend`);
 render(filmsElement, createMostCommentedTemplate(), `beforeend`);

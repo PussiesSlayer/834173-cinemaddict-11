@@ -73,18 +73,35 @@ const generateComments = () => {
     .map(generateComment);
 };
 
+const generateGenre = () => {
+  return getRandomValue(Genres);
+};
+
+const generateGenres = () => {
+  return new Array(getRandomNumber(1, 4))
+    .fill(``)
+    .map(generateGenre);
+};
+
 const generateFilm = () => {
   const name = getRandomValue(FilmsNames);
 
   return {
     name,
+    originalName: name,
     poster: `/images/posters/${convertNameToPoster(name)}.jpg`,
     description: getRandomDescription(),
-    rating: Math.floor(Math.random() * 10),
+    userRating: Math.floor(Math.random() * 10),
     comments: generateComments(),
+    date: `30 March`,
     year: 1929,
     duration: normalizeDuration(115),
-    genre: getRandomValue(Genres),
+    genres: generateGenres(),
+    ratingByAge: `18+`,
+    director: `Anthony Mann`,
+    writers: `Anne Wigton, Heinz Herald, Richard Weil`,
+    actors: `Erich von Stroheim, Mary Beth Hughes, Dan Duryea`,
+    country: `USA`,
   };
 };
 

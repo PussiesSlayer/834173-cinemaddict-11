@@ -7,8 +7,10 @@ import {createFooterStatisticTemplate} from "./components/footer-statistic";
 import {createTopRatedTemplate} from "./components/top-rated";
 import {createMostCommentedTemplate} from "./components/most-commented";
 import {createFilmPopupTemplate} from "./components/film-popup";
+import {createFiltersTemplate} from "./components/filters";
 import {films} from "./mock/film-card";
 import {CARDS_COUNT, CARDS_COUNT_SPECIAL} from "./consts";
+import {filters} from "./mock/filters";
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -20,6 +22,9 @@ const siteHeaderElement = document.querySelector(`.header`);
 render(siteHeaderElement, createUserRatingTemplate(), `beforeend`);
 render(siteMainElement, createMenuTemplate(), `beforeend`);
 render(siteMainElement, createSortingTemplate(), `beforeend`);
+
+const siteMenuElement = siteMainElement.querySelector(`.main-navigation`);
+render(siteMenuElement, createFiltersTemplate(filters), `afterbegin`);
 
 const filmsElement = siteMainElement.querySelector(`.films`);
 const filmListElement = filmsElement.querySelector(`.films-list`);
@@ -35,7 +40,7 @@ const footerStatisticElement = footerElement.querySelector(`.footer__statistics`
 
 render(footerStatisticElement, createFooterStatisticTemplate(), `beforeend`);
 
-render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
+// render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
 
 render(filmsElement, createTopRatedTemplate(), `beforeend`);
 render(filmsElement, createMostCommentedTemplate(), `beforeend`);

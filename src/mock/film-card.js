@@ -102,6 +102,9 @@ const generateFilm = () => {
     writers: `Anne Wigton, Heinz Herald, Richard Weil`,
     actors: `Erich von Stroheim, Mary Beth Hughes, Dan Duryea`,
     country: `USA`,
+    isFavorite: Math.random() > 0.5,
+    isWatched: Math.random() > 0.5,
+    isWantToWatch: Math.random() > 0.5,
   };
 };
 

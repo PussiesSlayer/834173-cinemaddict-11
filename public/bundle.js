@@ -335,7 +335,7 @@ const createFooterStatisticTemplate = () => {
 
 /***/ "./src/components/menu.js":
 /*!********************************!*\
-  !*** ./src/components/menu.js ***!
+  !*** ./src/components/filtersers.js ***!
   \********************************/
 /*! exports provided: createMenuTemplate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -496,7 +496,7 @@ const createUserRatingTemplate = () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_user_rating__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/user-rating */ "./src/components/user-rating.js");
-/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/menu */ "./src/components/menu.js");
+/* harmony import */ var _components_menu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/filters */ "./src/components/filters.js.js");
 /* harmony import */ var _components_sorting__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/sorting */ "./src/components/sorting.js");
 /* harmony import */ var _components_film_card__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/film-card */ "./src/components/film-card.js");
 /* harmony import */ var _components_show_more_button__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/show-more-button */ "./src/components/show-more-button.js");

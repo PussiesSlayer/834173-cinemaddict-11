@@ -42,7 +42,7 @@ const footerStatisticElement = footerElement.querySelector(`.footer__statistics`
 
 render(footerStatisticElement, createFooterStatisticTemplate(), `beforeend`);
 
-// render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
+render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
 
 const showMoreButton = filmListElement.querySelector(`.films-list__show-more`);
 

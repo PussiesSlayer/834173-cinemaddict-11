@@ -9,9 +9,10 @@ import MostCommentedComponent from "./components/most-commented";
 import FilmPopupComponent from "./components/film-popup";
 import FiltersComponent from "./components/filters";
 import FilmsBlockComponent from "./components/films-block";
+import NoFilmsComponent from "./components/no-films";
 import {RenderPosition, render} from "./utils";
 import {films} from "./mock/film-card";
-import {CARDS_COUNT_SPECIAL, CARDS_COUNT_DEFAULT, CARDS_COUNT_BY_BUTTON} from "./consts";
+import {CARDS_COUNT_SPECIAL, CARDS_COUNT_DEFAULT, CARDS_COUNT_BY_BUTTON, NO_FILMS} from "./consts";
 import {filters} from "./mock/filters";
 
 const siteMainElement = document.querySelector(`.main`);
@@ -57,6 +58,11 @@ const renderFilm = (filmsListElement, film) => {
 
 const renderFilmsBlock = (filmsBlockComponent, filmsCards) => {
   const filmsListElement = filmsBlockComponent.getElement().querySelector(`.films-list__container`);
+  const filmsListWrap = filmsBlockComponent.getElement().querySelector(`.films-list`);
+
+  if (filmsCards.length === NO_FILMS) {
+    render(filmsListWrap, new NoFilmsComponent().getElement(), RenderPosition.BEFOREEND);
+  }
 
   let showingFilmsCount = CARDS_COUNT_DEFAULT;
 
@@ -91,21 +97,23 @@ const footerStatisticElement = footerElement.querySelector(`.footer__statistics`
 
 render(footerStatisticElement, new FooterStatisticComponent().getElement(), RenderPosition.BEFOREEND);
 
-const mostCommentedFilms = films.slice().sort((a, b) => a.comments.length > b.comments.length ? -1 : 1);
-const topRatedFilms = films.slice().sort((a, b) => a.userRating > b.userRating ? -1 : 1);
+if (films.length !== NO_FILMS) {
+  const mostCommentedFilms = films.slice().sort((a, b) => a.comments.length > b.comments.length ? -1 : 1);
+  const topRatedFilms = films.slice().sort((a, b) => a.userRating > b.userRating ? -1 : 1);
 
-const topRatedComponent = new TopRatedComponent();
-const mostCommentedComponent = new MostCommentedComponent();
+  const topRatedComponent = new TopRatedComponent();
+  const mostCommentedComponent = new MostCommentedComponent();
 
-render(filmsBlock.getElement(), topRatedComponent.getElement(), RenderPosition.BEFOREEND);
-render(filmsBlock.getElement(), mostCommentedComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmsBlock.getElement(), topRatedComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmsBlock.getElement(), mostCommentedComponent.getElement(), RenderPosition.BEFOREEND);
 
-const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
+  const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
 
-topRatedFilms.slice(0, CARDS_COUNT_SPECIAL)
-  .forEach((film) => renderFilm(filmsTopRatedContainerElement, film));
+  topRatedFilms.slice(0, CARDS_COUNT_SPECIAL)
+    .forEach((film) => renderFilm(filmsTopRatedContainerElement, film));
 
-const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
+  const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
 
-mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL)
-  .forEach((film) => renderFilm(filmsMostCommentedContainerElement, film));
+  mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL)
+    .forEach((film) => renderFilm(filmsMostCommentedContainerElement, film));
+}

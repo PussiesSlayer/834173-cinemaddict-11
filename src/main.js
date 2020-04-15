@@ -26,7 +26,31 @@ render(siteMenuElement.getElement(), new FiltersComponent(filters).getElement(),
 render(siteMainElement, new SortingComponent().getElement(), RenderPosition.BEFOREEND);
 
 const renderFilm = (filmsListElement, film) => {
+  const showFilmPopup = () => {
+    footerElement.appendChild(filmPopupComponent.getElement());
+  };
+  const hideFilmPopup = () => {
+    footerElement.removeChild(filmPopupComponent.getElement());
+    filmPopupComponent.removeElement();
+  };
+
   const filmComponent = new FilmCardComponent(film);
+  const filmPopupComponent = new FilmPopupComponent(film);
+
+  const filmPoster = filmComponent.getElement().querySelector(`.film-card__poster`);
+  const filmName = filmComponent.getElement().querySelector(`.film-card__title`);
+  const filmCommentsBlock = filmComponent.getElement().querySelector(`.film-card__comments`);
+
+  const filmClickedElements = Array.of(filmPoster, filmName, filmCommentsBlock);
+  filmClickedElements.forEach((filmClickElement) => {
+    filmClickElement.addEventListener(`click`, () => {
+      showFilmPopup();
+    });
+  });
+
+  const closePopupButton = filmPopupComponent.getElement().querySelector(`.film-details__close-btn`);
+
+  closePopupButton.addEventListener(`click`, hideFilmPopup);
 
   render(filmsListElement, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };

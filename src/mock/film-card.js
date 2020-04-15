@@ -89,7 +89,7 @@ const generateFilm = () => {
   return {
     name,
     originalName: name,
-    poster: `/images/posters/${convertNameToPoster(name)}.jpg`,
+    poster: `images/posters/${convertNameToPoster(name)}.jpg`,
     description: getRandomDescription(),
     userRating: Math.floor(Math.random() * 10),
     comments: generateComments(),

@@ -2,7 +2,7 @@ import UserRatingComponent from "./components/user-rating";
 import MenuComponent from "./components/menu";
 import SortingComponent from "./components/sorting";
 import FilmCardComponent from "./components/film-card";
-import ShowMoreButton from "./components/show-more-button";
+import ShowMoreButtonComponent from "./components/show-more-button";
 import FooterStatisticComponent from "./components/footer-statistic";
 import TopRatedComponent from "./components/top-rated";
 import MostCommentedComponent from "./components/most-commented";
@@ -38,38 +38,25 @@ const renderFilmsBlock = (filmsBlockComponent, filmsCards) => {
   filmsCards.slice(0, showingFilmsCount)
     .forEach((film) => renderFilm(filmsListElement, film));
 
-  const showMoreButtonComponent = new ShowMoreButton();
-  render(filmsListElement, showMoreButtonComponent.getElement(), RenderPosition.AFTEREND);
+  const showMoreButtonComponent = new ShowMoreButtonComponent();
+
+  if (filmsCards.length > CARDS_COUNT_DEFAULT) {
+    render(filmsListElement, showMoreButtonComponent.getElement(), RenderPosition.AFTEREND);
+
+    showMoreButtonComponent.getElement().addEventListener(`click`, () => {
+      const prevFilmsCount = showingFilmsCount;
+      showingFilmsCount = showingFilmsCount + CARDS_COUNT_BY_BUTTON;
+
+      filmsCards.slice(prevFilmsCount, showingFilmsCount)
+        .forEach((film) => renderFilm(filmsListElement, film));
+
+      if (showingFilmsCount >= filmsCards.length) {
+        showMoreButtonComponent.getElement().remove();
+        showMoreButtonComponent.removeElement();
+      }
+    });
+  }
 };
-
-// const filmsElement = siteMainElement.querySelector(`.films`);
-// const filmListElement = filmsElement.querySelector(`.films-list`);
-// const filmListContainerElement = filmListElement.querySelector(`.films-list__container`);
-//
-//
-//
-// films.slice(0, showingFilmsCount)
-//   .forEach((film) => render(filmListContainerElement, createFilmCardTemplate(film), `beforeend`));
-//
-// render(filmListElement, createShowMoreButton(), `beforeend`);
-//
-
-//
-// render(footerElement, createFilmPopupTemplate(films[0]), `afterend`);
-//
-// const showMoreButton = filmListElement.querySelector(`.films-list__show-more`);
-//
-// showMoreButton.addEventListener(`click`, () => {
-//   const prevFilmsCount = showingFilmsCount;
-//   showingFilmsCount = showingFilmsCount + CARDS_COUNT_BY_BUTTON;
-//
-//   films.slice(prevFilmsCount, showingFilmsCount)
-//     .forEach((film) => render(filmListContainerElement, createFilmCardTemplate(film), `beforeend`));
-//
-//   if (showingFilmsCount > films.length) {
-//     showMoreButton.remove();
-//   }
-// });
 
 const filmsBlock = new FilmsBlockComponent();
 render(siteMainElement, filmsBlock.getElement(), RenderPosition.BEFOREEND);

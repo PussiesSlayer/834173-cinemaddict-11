@@ -16,6 +16,7 @@ import {filters} from "./mock/filters";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);
+const footerElement = document.querySelector(`.footer`);
 
 const siteMenuElement = new MenuComponent();
 
@@ -62,27 +63,25 @@ const filmsBlock = new FilmsBlockComponent();
 render(siteMainElement, filmsBlock.getElement(), RenderPosition.BEFOREEND);
 renderFilmsBlock(filmsBlock, films);
 
-const footerElement = document.querySelector(`.footer`);
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 
 render(footerStatisticElement, new FooterStatisticComponent().getElement(), RenderPosition.BEFOREEND);
 
-// EXTRA
+const mostCommentedFilms = films.slice().sort((a, b) => a.comments.length > b.comments.length ? -1 : 1);
+const topRatedFilms = films.slice().sort((a, b) => a.userRating > b.userRating ? -1 : 1);
 
-// const mostCommentedFilms = films.slice().sort((a, b) => a.comments.length > b.comments.length ? -1 : 1);
-// const topRatedFilms = films.slice().sort((a, b) => a.userRating > b.userRating ? -1 : 1);
-//
-// render(filmsElement, createTopRatedTemplate(), `beforeend`);
-// render(filmsElement, createMostCommentedTemplate(), `beforeend`);
-//
-// const filmsTopRatedElement = filmsElement.querySelector(`.films-list--extra`);
-// const filmsTopRatedContainerElement = filmsTopRatedElement.querySelector(`.films-list__container`);
-//
-// topRatedFilms.slice(0, CARDS_COUNT_SPECIAL)
-//   .forEach((film) => render(filmsTopRatedContainerElement, createFilmCardTemplate(film), `beforeend`));
-//
-// const filmsMostCommentedElement = filmsElement.querySelector(`.films-list--extra:last-of-type`);
-// const filmsMostCommentedContainerElement = filmsMostCommentedElement.querySelector(`.films-list__container`);
-//
-// mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL)
-//   .forEach((film) => render(filmsMostCommentedContainerElement, createFilmCardTemplate(film), `beforeend`));
+const topRatedComponent = new TopRatedComponent();
+const mostCommentedComponent = new MostCommentedComponent();
+
+render(filmsBlock.getElement(), topRatedComponent.getElement(), RenderPosition.BEFOREEND);
+render(filmsBlock.getElement(), mostCommentedComponent.getElement(), RenderPosition.BEFOREEND);
+
+const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
+
+topRatedFilms.slice(0, CARDS_COUNT_SPECIAL)
+  .forEach((film) => renderFilm(filmsTopRatedContainerElement, film));
+
+const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
+
+mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL)
+  .forEach((film) => renderFilm(filmsMostCommentedContainerElement, film));

@@ -1,4 +1,5 @@
 import {EMOGIES} from "../consts";
+import {createElement} from "../utils";
 
 const createCommentsMarkUp = (comments) => {
   return comments
@@ -168,4 +169,26 @@ const createFilmPopupTemplate = (film) => {
   );
 };
 
-export {createFilmPopupTemplate};
+export default class FilmPopup {
+  constructor(film) {
+    this._film = film;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmPopupTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

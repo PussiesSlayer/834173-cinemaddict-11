@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const createUserRatingTemplate = () => {
   return (
     `<section class="header__profile profile">
@@ -7,4 +9,24 @@ const createUserRatingTemplate = () => {
   );
 };
 
-export {createUserRatingTemplate};
+export default class UserRating {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createUserRatingTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

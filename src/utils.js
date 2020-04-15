@@ -24,3 +24,23 @@ export const createElement = (template) => {
 
   return newElement.firstChild;
 };
+
+export const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
+};
+
+export const render = (container, template, place) => {
+  switch (place) {
+    case RenderPosition.BEFOREEND:
+      container.append(template);
+      break;
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(template);
+      break;
+    case RenderPosition.AFTEREND:
+      container.after(template);
+      break;
+  }
+};

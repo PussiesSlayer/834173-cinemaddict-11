@@ -1,7 +1,7 @@
 import AbstractComponent from "./abstract-component";
 
-const createFilmCardTemplate = (film) => {
-  const {name, poster, description, comments, userRating, year, duration, genres} = film;
+const createFilmCardTemplate = (film, comments) => {
+  const {name, poster, description, userRating, year, duration, genres} = film;
 
   return (
     `<article class="film-card">
@@ -25,13 +25,14 @@ const createFilmCardTemplate = (film) => {
 };
 
 export default class FilmCard extends AbstractComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film);
+    return createFilmCardTemplate(this._film, this._comments);
   }
 
   setOpenPopupClickHandler(handler) {

@@ -41,7 +41,7 @@ const createInstallEmojiMarkup = (emogies) => {
     }).join(`\n`);
 };
 
-const createFilmPopupTemplate = (film) => {
+const createFilmPopupTemplate = (film, comments) => {
   const {
     name,
     poster,
@@ -50,7 +50,6 @@ const createFilmPopupTemplate = (film) => {
     writers,
     date,
     description,
-    comments,
     userRating,
     year,
     duration,
@@ -170,13 +169,14 @@ const createFilmPopupTemplate = (film) => {
 };
 
 export default class FilmPopup extends AbstractComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments;
   }
 
   getTemplate() {
-    return createFilmPopupTemplate(this._film);
+    return createFilmPopupTemplate(this._film, this._comments);
   }
 
   setCloseButtonClickHandler(handler) {

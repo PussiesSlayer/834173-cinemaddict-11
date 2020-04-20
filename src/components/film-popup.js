@@ -1,4 +1,4 @@
-import {EMOGIES} from "../consts";
+import {EMOGIES, MONTH_NAMES} from "../consts";
 import AbstractComponent from "./abstract-component";
 
 const createCommentsMarkUp = (comments) => {
@@ -51,7 +51,6 @@ const createFilmPopupTemplate = (film, comments) => {
     date,
     description,
     userRating,
-    year,
     duration,
     genres,
     ratingByAge,
@@ -62,6 +61,8 @@ const createFilmPopupTemplate = (film, comments) => {
   const genreTitle = genres.length > 1 ? `Genres` : `Genre`;
   const commentsMarkup = createCommentsMarkUp(comments);
   const installingEmojiMarkup = createInstallEmojiMarkup(EMOGIES);
+
+  const fullDate = `${date.getDay()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
 
   return (
     `<section class="film-details">
@@ -104,7 +105,7 @@ const createFilmPopupTemplate = (film, comments) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${date} ${year}</td>
+              <td class="film-details__cell">${fullDate}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>

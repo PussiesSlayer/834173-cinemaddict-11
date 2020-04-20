@@ -6,3 +6,24 @@ export const CARDS_COUNT_SPECIAL = 2;
 export const NO_FILMS = 0;
 
 export const EMOGIES = [`angry`, `puke`, `sleeping`, `smile`];
+
+export const SortType = {
+  DEFAULT: `default`,
+  BY_RATING: `by-date`,
+  BY_DATE: `by-rating`,
+};
+
+export const MONTH_NAMES = [
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `October`,
+  `November`,
+  `December`,
+];

@@ -58,6 +58,16 @@ const getRandomDescription = () => {
   return newDescription;
 };
 
+const getRandomDate = () => {
+  const targetDate = new Date();
+  const sign = Math.random() > 0.5 ? 1 : -1;
+  const diffValue = sign * getRandomNumber(0, 365);
+
+  targetDate.setDate(targetDate.getDate() + diffValue);
+
+  return targetDate;
+};
+
 const generateComment = () => {
   return {
     emoji: getRandomValue(Emogies),
@@ -92,8 +102,7 @@ const generateFilm = () => {
     poster: `images/posters/${convertNameToPoster(name)}.jpg`,
     description: getRandomDescription(),
     userRating: Math.floor(Math.random() * 10),
-    date: `30 March`,
-    year: 1929,
+    date: getRandomDate(),
     duration: normalizeDuration(115),
     genres: generateGenres(),
     ratingByAge: `18+`,

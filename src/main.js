@@ -29,24 +29,3 @@ pageController.render(films, generateComments());
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 
 render(footerStatisticElement, new FooterStatisticComponent(), RenderPosition.BEFOREEND);
-
-// if (films.length !== NO_FILMS) {
-//   const mostCommentedFilms = films.slice().sort((a, b) => a.comments.length > b.comments.length ? -1 : 1);
-//   const topRatedFilms = films.slice().sort((a, b) => a.userRating > b.userRating ? -1 : 1);
-//
-//   const topRatedComponent = new TopRatedComponent();
-//   const mostCommentedComponent = new MostCommentedComponent();
-//
-//   render(filmsBlock.getElement(), topRatedComponent, RenderPosition.BEFOREEND);
-//   render(filmsBlock.getElement(), mostCommentedComponent, RenderPosition.BEFOREEND);
-//
-//   const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
-//
-//   topRatedFilms.slice(0, CARDS_COUNT_SPECIAL)
-//     .forEach((film) => renderFilm(filmsTopRatedContainerElement, film));
-//
-//   const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
-//
-//   mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL)
-//     .forEach((film) => renderFilm(filmsMostCommentedContainerElement, film));
-// }

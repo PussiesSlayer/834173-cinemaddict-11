@@ -1,5 +1,5 @@
 import {EMOGIES} from "../consts";
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract-component";
 
 const createCommentsMarkUp = (comments) => {
   return comments
@@ -41,7 +41,7 @@ const createInstallEmojiMarkup = (emogies) => {
     }).join(`\n`);
 };
 
-const createFilmPopupTemplate = (film) => {
+const createFilmPopupTemplate = (film, comments) => {
   const {
     name,
     poster,
@@ -50,7 +50,6 @@ const createFilmPopupTemplate = (film) => {
     writers,
     date,
     description,
-    comments,
     userRating,
     year,
     duration,
@@ -169,26 +168,20 @@ const createFilmPopupTemplate = (film) => {
   );
 };
 
-export default class FilmPopup {
-  constructor(film) {
+export default class FilmPopup extends AbstractComponent {
+  constructor(film, comments) {
+    super();
     this._film = film;
-
-    this._element = null;
+    this._comments = comments;
   }
 
   getTemplate() {
-    return createFilmPopupTemplate(this._film);
+    return createFilmPopupTemplate(this._film, this._comments);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  setCloseButtonClickHandler(handler) {
+    const closePopupButton = this.getElement().querySelector(`.film-details__close-btn`);
 
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    closePopupButton.addEventListener(`click`, handler);
   }
 }

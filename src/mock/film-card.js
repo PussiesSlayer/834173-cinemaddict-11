@@ -1,4 +1,4 @@
-import {getRandomNumber, normalizeDuration} from "../utils";
+import {getRandomNumber, normalizeDuration} from "../utils/common";
 import {CARDS_COUNT} from "../consts";
 
 const DescriptionItems = [
@@ -92,7 +92,6 @@ const generateFilm = () => {
     poster: `images/posters/${convertNameToPoster(name)}.jpg`,
     description: getRandomDescription(),
     userRating: Math.floor(Math.random() * 10),
-    comments: generateComments(),
     date: `30 March`,
     year: 1929,
     duration: normalizeDuration(115),
@@ -116,4 +115,4 @@ const generateFilms = (count) => {
 
 const films = generateFilms(CARDS_COUNT);
 
-export {films};
+export {films, generateComments};

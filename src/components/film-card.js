@@ -1,7 +1,7 @@
-import {createElement} from "../utils";
+import AbstractComponent from "./abstract-component";
 
-const createFilmCardTemplate = (film) => {
-  const {name, poster, description, comments, userRating, year, duration, genres} = film;
+const createFilmCardTemplate = (film, comments) => {
+  const {name, poster, description, userRating, year, duration, genres} = film;
 
   return (
     `<article class="film-card">
@@ -24,25 +24,26 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export default class FilmCard {
-  constructor(film) {
+export default class FilmCard extends AbstractComponent {
+  constructor(film, comments) {
+    super();
     this._film = film;
-    this._element = null;
+    this._comments = comments;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film);
+    return createFilmCardTemplate(this._film, this._comments);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  setOpenPopupClickHandler(handler) {
+    const filmPoster = this.getElement().querySelector(`.film-card__poster`);
+    const filmName = this.getElement().querySelector(`.film-card__title`);
+    const filmCommentsBlock = this.getElement().querySelector(`.film-card__comments`);
 
-    return this._element;
-  }
+    const filmClickedElements = Array.of(filmPoster, filmName, filmCommentsBlock);
 
-  removeElement() {
-    this._element = null;
+    filmClickedElements.forEach((filmClickElement) => {
+      filmClickElement.addEventListener(`click`, handler);
+    });
   }
 }

@@ -1,4 +1,4 @@
-import {getRandomNumber, normalizeDuration} from "../utils";
+import {getRandomNumber, normalizeDuration} from "../utils/common";
 import {CARDS_COUNT} from "../consts";
 
 const DescriptionItems = [

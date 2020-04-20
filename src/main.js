@@ -30,9 +30,7 @@ const renderFilm = (filmsListElement, film) => {
   const showFilmPopup = () => {
     appendChildComponent(footerElement, filmPopupComponent);
 
-    const closePopupButton = filmPopupComponent.getElement().querySelector(`.film-details__close-btn`);
-
-    closePopupButton.addEventListener(`click`, () => {
+    filmPopupComponent.setCloseButtonClickHandler(() => {
       hideFilmPopup();
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
@@ -56,16 +54,9 @@ const renderFilm = (filmsListElement, film) => {
   const filmComponent = new FilmCardComponent(film);
   const filmPopupComponent = new FilmPopupComponent(film);
 
-  const filmPoster = filmComponent.getElement().querySelector(`.film-card__poster`);
-  const filmName = filmComponent.getElement().querySelector(`.film-card__title`);
-  const filmCommentsBlock = filmComponent.getElement().querySelector(`.film-card__comments`);
-
-  const filmClickedElements = Array.of(filmPoster, filmName, filmCommentsBlock);
-  filmClickedElements.forEach((filmClickElement) => {
-    filmClickElement.addEventListener(`click`, () => {
-      showFilmPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
+  filmComponent.setOpenPopupClickHandler(() => {
+    showFilmPopup();
+    document.addEventListener(`keydown`, onEscKeyDown);
   });
 
   render(filmsListElement, filmComponent, RenderPosition.BEFOREEND);
@@ -89,7 +80,7 @@ const renderFilmsBlock = (filmsBlockComponent, filmsCards) => {
   if (filmsCards.length > CARDS_COUNT_DEFAULT) {
     render(filmsListElement, showMoreButtonComponent, RenderPosition.AFTEREND);
 
-    showMoreButtonComponent.getElement().addEventListener(`click`, () => {
+    showMoreButtonComponent.setCLickHandler(() => {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount = showingFilmsCount + CARDS_COUNT_BY_BUTTON;
 

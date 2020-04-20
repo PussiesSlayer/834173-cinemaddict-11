@@ -1,6 +1,5 @@
 import UserRatingComponent from "./components/user-rating";
 import MenuComponent from "./components/menu";
-import SortingComponent from "./components/sorting";
 import FooterStatisticComponent from "./components/footer-statistic";
 import FiltersComponent from "./components/filters";
 import FilmsBlockComponent from "./components/films-block";
@@ -18,7 +17,6 @@ const siteMenuElement = new MenuComponent();
 render(siteHeaderElement, new UserRatingComponent(), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 render(siteMenuElement.getElement(), new FiltersComponent(filters), RenderPosition.AFTERBEGIN);
-render(siteMainElement, new SortingComponent(), RenderPosition.BEFOREEND);
 
 const filmsBlock = new FilmsBlockComponent();
 const pageController = new PageController(filmsBlock);

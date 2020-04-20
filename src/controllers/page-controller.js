@@ -43,6 +43,10 @@ const renderFilm = (filmsListElement, film, comments) => {
   render(filmsListElement, filmComponent, RenderPosition.BEFOREEND);
 };
 
+const renderFilms = (filmsListElement, films, comments) => {
+  films.forEach((film) => renderFilm(filmsListElement, film, comments));
+};
+
 export default class PageController {
   constructor(container) {
     this._container = container;
@@ -64,8 +68,7 @@ export default class PageController {
         const prevFilmsCount = showingFilmsCount;
         showingFilmsCount = showingFilmsCount + CARDS_COUNT_BY_BUTTON;
 
-        films.slice(prevFilmsCount, showingFilmsCount)
-          .forEach((film) => renderFilm(filmsListElement, film, comments));
+        renderFilms(filmsListElement, films.slice(prevFilmsCount, showingFilmsCount), comments);
 
         if (showingFilmsCount >= films.length) {
           remove(this._showMoreButtonComponent);
@@ -79,7 +82,6 @@ export default class PageController {
       render(filmsListWrap, this._noFilmsComponent, RenderPosition.BEFOREEND);
     }
 
-    films.slice(0, showingFilmsCount)
-      .forEach((film) => renderFilm(filmsListElement, film, comments));
+    renderFilms(filmsListElement, films.slice(0, showingFilmsCount), comments);
   }
 }

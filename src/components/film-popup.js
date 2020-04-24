@@ -1,7 +1,7 @@
-import {EMOGIES, MONTH_NAMES} from "../consts";
 import AbstractComponent from "./abstract-component";
+import {EMOGIES, MONTH_NAMES, TypesButton} from "../consts";
 
-const createCommentsMarkUp = (comments) => {
+const createCommentsMarkup = (comments) => {
   return comments
     .map((comment) => {
       return (
@@ -41,6 +41,33 @@ const createInstallEmojiMarkup = (emogies) => {
     }).join(`\n`);
 };
 
+const createCheckboxMarkup = (name, isChecked) => {
+  const setDescriptionButton = () => {
+    let descriptionButton;
+
+    switch (name) {
+      case TypesButton.FAVORITE:
+        descriptionButton = `Add to favorites`;
+        break;
+      case TypesButton.WATCHLIST:
+        descriptionButton = `Add to ${name}`;
+        break;
+      case TypesButton.WATCHED:
+        descriptionButton = `Already ${name}`;
+        break;
+    }
+
+    return descriptionButton;
+  };
+
+  return (
+    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${name}" name="${name}" ${isChecked ? `checked` : ``}>
+     <label for="${name}" class="film-details__control-label film-details__control-label--${name}">
+        ${setDescriptionButton()}
+     </label>`
+  );
+};
+
 const createFilmPopupTemplate = (film, comments) => {
   const {
     name,
@@ -59,10 +86,14 @@ const createFilmPopupTemplate = (film, comments) => {
   } = film;
 
   const genreTitle = genres.length > 1 ? `Genres` : `Genre`;
-  const commentsMarkup = createCommentsMarkUp(comments);
+  const commentsMarkup = createCommentsMarkup(comments);
   const installingEmojiMarkup = createInstallEmojiMarkup(EMOGIES);
 
   const fullDate = `${date.getDay()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+
+  const watchlistCheckbox = createCheckboxMarkup(TypesButton.WATCHLIST, film.isWantToWatch);
+  const watchedCheckbox = createCheckboxMarkup(TypesButton.WATCHED, film.isWatched);
+  const favoriteCheckbox = createCheckboxMarkup(TypesButton.FAVORITE, film.isFavorite);
 
   return (
     `<section class="film-details">
@@ -132,14 +163,9 @@ const createFilmPopupTemplate = (film, comments) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+        ${watchlistCheckbox}
+        ${watchedCheckbox}
+        ${favoriteCheckbox}
       </section>
     </div>
 
@@ -184,5 +210,20 @@ export default class FilmPopup extends AbstractComponent {
     const closePopupButton = this.getElement().querySelector(`.film-details__close-btn`);
 
     closePopupButton.addEventListener(`click`, handler);
+  }
+
+  setAddWatchlistCheckboxChangeHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`change`, handler);
+  }
+
+  setWatchedCheckboxChangeHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`change`, handler);
+  }
+
+  setFavoriteCheckboxChangeHandler(handler) {
+    this.getElement().querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`change`, handler);
   }
 }

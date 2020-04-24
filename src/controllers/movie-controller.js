@@ -24,23 +24,30 @@ export default class MovieController {
 
     render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
 
-    this._filmComponent.setAddWatchlistButtonCLickHandler(() => {
+    const changeWatchlistStatus = () => {
       this._onDataChange(film, Object.assign({}, film, {
         isWantToWatch: !film.isWantToWatch,
       }));
-    });
+    };
 
-    this._filmComponent.setWatchedButtonClickHandler(() => {
+    const changeWatchedStatus = () => {
       this._onDataChange(film, Object.assign({}, film, {
         isWatched: !film.isWatched,
       }));
-    });
+    };
 
-    this._filmComponent.setFavoriteButtonClickHandler(() => {
+    const changeFavoriteStatus = () => {
       this._onDataChange(film, Object.assign({}, film, {
         isFavorite: !film.isFavorite,
       }));
-    });
+    };
+
+    this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
+    this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
+    this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
+    this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
+    this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
+    this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
   }
 
   _showFilmPopup() {

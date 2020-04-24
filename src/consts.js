@@ -27,3 +27,9 @@ export const MONTH_NAMES = [
   `November`,
   `December`,
 ];
+
+export const TypesButton = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `watched`,
+  FAVORITE: `favorite`,
+};

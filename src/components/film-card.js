@@ -1,8 +1,28 @@
 import AbstractComponent from "./abstract-component";
 
+const TypesButton = {
+  ADD_TO_WATCHLIST: `Add to watchlist`,
+  MARK_AS_WATCHED: `Mark as watched`,
+  MARK_AS_FAVORITE: `favorite`,
+};
+
+const createButtonMarkup = (name) => {
+  const nameForClass = name.toLowerCase().split(` `).join(`-`);
+
+  return (
+    `<button class="film-card__controls-item button film-card__controls-item--${nameForClass}">
+      ${name === TypesButton.MARK_AS_FAVORITE ? `Mark as ${name}` : `${name}`}
+     </button>`
+  );
+};
+
 const createFilmCardTemplate = (film, comments) => {
   const {name, poster, description, userRating, date, duration, genres} = film;
   const year = date.getFullYear();
+
+  const watchlistButton = createButtonMarkup(TypesButton.ADD_TO_WATCHLIST);
+  const watchedButton = createButtonMarkup(TypesButton.MARK_AS_WATCHED);
+  const favoriteButton = createButtonMarkup(TypesButton.MARK_AS_FAVORITE);
 
   return (
     `<article class="film-card">
@@ -17,9 +37,9 @@ const createFilmCardTemplate = (film, comments) => {
           <p class="film-card__description">${description}</p>
           <a class="film-card__comments">${comments.length} comments</a>
           <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+            ${watchlistButton}
+            ${watchedButton}
+            ${favoriteButton}
           </form>
         </article>`
   );

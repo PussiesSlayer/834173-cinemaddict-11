@@ -3,11 +3,12 @@ import FilmPopupComponent from "../components/film-popup";
 import {appendChildComponent, remove, render, RenderPosition} from "../utils/render";
 
 export default class MovieController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
 
     this._filmPopupComponent = null;
     this._filmComponent = null;
+    this._onDataChange = onDataChange;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -22,6 +23,24 @@ export default class MovieController {
     });
 
     render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
+
+    this._filmComponent.setAddWatchlistButtonCLickHandler(() => {
+      this._onDataChange(film, Object.assign({}, film, {
+        isWantToWatch: !film.isWantToWatch,
+      }));
+    });
+
+    this._filmComponent.setWatchedButtonClickHandler(() => {
+      this._onDataChange(film, Object.assign({}, film, {
+        isWatched: !film.isWatched,
+      }));
+    });
+
+    this._filmComponent.setFavoriteButtonClickHandler(() => {
+      this._onDataChange(film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite,
+      }));
+    });
   }
 
   _showFilmPopup() {

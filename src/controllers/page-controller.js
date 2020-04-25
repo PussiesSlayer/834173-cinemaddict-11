@@ -119,12 +119,10 @@ export default class PageController {
     render(container, mostCommentedComponent, RenderPosition.BEFOREEND);
 
     const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
-    const newTopRatedFilms = renderFilms(filmsTopRatedContainerElement, topRatedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newTopRatedFilms);
+    renderFilms(filmsTopRatedContainerElement, topRatedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange);
 
     const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
-    const newMostCommentedFilms = renderFilms(filmsMostCommentedContainerElement, mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange);
-    this._showedFilmControllers = this._showedFilmControllers.concat(newMostCommentedFilms);
+    renderFilms(filmsMostCommentedContainerElement, mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange);
   }
 
   _onSortTypeChange(sortType) {

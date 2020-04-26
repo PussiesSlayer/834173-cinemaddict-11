@@ -1,7 +1,7 @@
 import AbstractComponent from "./abstract-component";
 import {TypesButton} from "../consts";
 
-const createButtonMarkup = (name) => {
+const createButtonMarkup = (name, isChecked) => {
   const setNameForClass = () => {
     let nameForClass;
 
@@ -21,7 +21,7 @@ const createButtonMarkup = (name) => {
   };
 
   return (
-    `<button class="film-card__controls-item button film-card__controls-item--${setNameForClass()}">
+    `<button class="film-card__controls-item button film-card__controls-item--${setNameForClass()} ${isChecked ? `film-card__controls-item--active` : ``}">
       ${name === TypesButton.WATCHLIST ? `Add to ${name}` : `Mark as ${name}`}
      </button>`
   );
@@ -31,9 +31,9 @@ const createFilmCardTemplate = (film, comments) => {
   const {name, poster, description, userRating, date, duration, genres} = film;
   const year = date.getFullYear();
 
-  const watchlistButton = createButtonMarkup(TypesButton.WATCHLIST);
-  const watchedButton = createButtonMarkup(TypesButton.WATCHED);
-  const favoriteButton = createButtonMarkup(TypesButton.FAVORITE);
+  const watchlistButton = createButtonMarkup(TypesButton.WATCHLIST, film.isWantToWatch);
+  const watchedButton = createButtonMarkup(TypesButton.WATCHED, film.isWatched);
+  const favoriteButton = createButtonMarkup(TypesButton.FAVORITE, film.isFavorite);
 
   return (
     `<article class="film-card">

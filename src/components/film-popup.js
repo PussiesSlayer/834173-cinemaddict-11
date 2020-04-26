@@ -238,21 +238,21 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   setAddWatchlistCheckboxChangeHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`)
+    this.getElement().querySelector(`#watchlist`)
       .addEventListener(`change`, handler);
 
     this._addWatchlistCheckboxChangeHandler = handler;
   }
 
   setWatchedCheckboxChangeHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`)
+    this.getElement().querySelector(`#watched`)
       .addEventListener(`change`, handler);
 
     this._watchedCheckboxChangeHandler = handler;
   }
 
   setFavoriteCheckboxChangeHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`)
+    this.getElement().querySelector(`#favorite`)
       .addEventListener(`change`, handler);
 
     this._favoriteCheckboxChangeHandler = handler;
@@ -282,5 +282,9 @@ export default class FilmPopup extends AbstractSmartComponent {
     super.rerender();
   }
 
-  reset() {}
+  reset() {
+    this._chosenEmoji = null;
+
+    this.rerender();
+  }
 }

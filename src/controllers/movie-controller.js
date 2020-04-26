@@ -2,13 +2,21 @@ import FilmCardComponent from "../components/film-card";
 import FilmPopupComponent from "../components/film-popup";
 import {appendChildComponent, remove, render, RenderPosition} from "../utils/render";
 
+const PopupStatus = {
+  SHOW: `show`,
+  HIDE: `hide`,
+};
+
 export default class MovieController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
 
     this._filmPopupComponent = null;
     this._filmComponent = null;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+
+    this._mode = PopupStatus.HIDE;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
@@ -21,6 +29,11 @@ export default class MovieController {
       this._showFilmPopup();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
+
+    // this._filmPopupComponent.setCloseButtonClickHandler(() => {
+    //   this._hideFilmPopup();
+    //   document.removeEventListener(`keydown`, this._onEscKeyDown);
+    // });
 
     render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
 
@@ -53,17 +66,22 @@ export default class MovieController {
   _showFilmPopup() {
     const footerElement = document.querySelector(`.footer`);
 
+    this._onViewChange();
     appendChildComponent(footerElement, this._filmPopupComponent);
 
     this._filmPopupComponent.setCloseButtonClickHandler(() => {
       this._hideFilmPopup();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
+
+    this._mode = PopupStatus.SHOW;
   }
 
   _hideFilmPopup() {
     if (this._filmPopupComponent) {
+      this._filmPopupComponent.reset();
       remove(this._filmPopupComponent);
+      this._mode = PopupStatus.HIDE;
     }
   }
 
@@ -73,6 +91,12 @@ export default class MovieController {
     if (isEscapeKey) {
       this._hideFilmPopup();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
+    }
+  }
+
+  setDefaultView() {
+    if (this._mode !== PopupStatus.HIDE) {
+      this._hideFilmPopup();
     }
   }
 }

@@ -1,6 +1,6 @@
 import FilmCardComponent from "../components/film-card";
 import FilmPopupComponent from "../components/film-popup";
-import {appendChildComponent, remove, render, RenderPosition} from "../utils/render";
+import {appendChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
 
 const PopupStatus = {
   SHOW: `show`,
@@ -22,6 +22,9 @@ export default class MovieController {
   }
 
   render(film, comments) {
+    const oldFlmComponent = this._filmComponent;
+    const oldFilmPopupComponent = this._filmPopupComponent;
+
     this._filmPopupComponent = new FilmPopupComponent(film, comments);
     this._filmComponent = new FilmCardComponent(film, comments);
 
@@ -34,8 +37,6 @@ export default class MovieController {
     //   this._hideFilmPopup();
     //   document.removeEventListener(`keydown`, this._onEscKeyDown);
     // });
-
-    render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
 
     const changeWatchlistStatus = () => {
       this._onDataChange(film, Object.assign({}, film, {
@@ -61,6 +62,13 @@ export default class MovieController {
     this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
     this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
     this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
+
+    if (oldFlmComponent && oldFilmPopupComponent) {
+      replace(this._filmComponent, oldFlmComponent);
+      replace(this._filmPopupComponent, oldFilmPopupComponent);
+    } else {
+      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
+    }
   }
 
   _showFilmPopup() {

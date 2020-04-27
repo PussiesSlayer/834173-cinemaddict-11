@@ -21,3 +21,7 @@ export const normalizeDuration = (duration) => {
 export const formatReleaseDate = (date) => {
   return moment(date).format(`DD MMMM YYYY`);
 };
+
+export const formatReaseYear = (date) => {
+  return moment(date).format(`YYYY`);
+};

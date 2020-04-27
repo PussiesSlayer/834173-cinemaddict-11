@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {EMOGIES, MONTH_NAMES, TypesButton} from "../consts";
+import {EMOGIES, TypesButton} from "../consts";
 import {formatReleaseDate} from "../utils/common";
 
 const createCommentsMarkup = (comments) => {
@@ -108,14 +108,14 @@ const createFilmPopupTemplate = (film, comments, options = {}) => {
     actors,
     country,
   } = film;
+
   const {chosenEmoji} = options;
 
   const genreTitle = genres.length > 1 ? `Genres` : `Genre`;
   const commentsMarkup = createCommentsMarkup(comments);
   const newCommentMarkup = createNewCommentMarkup(chosenEmoji);
 
-  // const fullDate = `${date.getDay()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
-  const relizeDate = formatReleaseDate(date);
+  const releaseDate = formatReleaseDate(date);
 
   const watchlistCheckbox = createCheckboxMarkup(TypesButton.WATCHLIST, film.isWantToWatch);
   const watchedCheckbox = createCheckboxMarkup(TypesButton.WATCHED, film.isWatched);
@@ -162,7 +162,7 @@ const createFilmPopupTemplate = (film, comments, options = {}) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${relizeDate}</td>
+              <td class="film-details__cell">${releaseDate}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>

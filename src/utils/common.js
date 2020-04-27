@@ -27,5 +27,6 @@ export const formatReleaseYear = (date) => {
 };
 
 export const formatDateOfComment = (date) => {
-  return moment(date).format(`YYYY/MM/DD H:mm`);
+  // return moment(date).format(`YYYY/MM/DD H:mm`);
+  return moment(date).fromNow();
 };

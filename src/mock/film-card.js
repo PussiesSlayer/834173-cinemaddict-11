@@ -1,4 +1,4 @@
-import {getRandomNumber, normalizeDuration} from "../utils/common";
+import {getRandomNumber} from "../utils/common";
 import {CARDS_COUNT} from "../consts";
 
 const DescriptionItems = [
@@ -103,7 +103,7 @@ const generateFilm = () => {
     description: getRandomDescription(),
     userRating: Math.floor(Math.random() * 10),
     date: getRandomDate(),
-    duration: normalizeDuration(115),
+    duration: 124,
     genres: generateGenres(),
     ratingByAge: `18+`,
     director: `Anthony Mann`,

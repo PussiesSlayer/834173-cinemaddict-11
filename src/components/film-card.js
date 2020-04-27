@@ -1,5 +1,6 @@
 import AbstractComponent from "./abstract-component";
 import {TypesButton} from "../consts";
+import {normalizeDuration, formatReleaseDate} from "../utils/common";
 
 const createButtonMarkup = (name, isChecked) => {
   const setNameForClass = () => {
@@ -34,6 +35,7 @@ const createFilmCardTemplate = (film, comments) => {
   const watchlistButton = createButtonMarkup(TypesButton.WATCHLIST, film.isWantToWatch);
   const watchedButton = createButtonMarkup(TypesButton.WATCHED, film.isWatched);
   const favoriteButton = createButtonMarkup(TypesButton.FAVORITE, film.isFavorite);
+  const normalDuration = normalizeDuration(duration);
 
   return (
     `<article class="film-card">
@@ -41,7 +43,7 @@ const createFilmCardTemplate = (film, comments) => {
           <p class="film-card__rating">${userRating}</p>
           <p class="film-card__info">
             <span class="film-card__year">${year}</span>
-            <span class="film-card__duration">${duration}</span>
+            <span class="film-card__duration">${normalDuration}</span>
             <span class="film-card__genre">${genres[0]}</span>
           </p>
           <img src=${poster} alt="${name}" class="film-card__poster">

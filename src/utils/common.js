@@ -1,4 +1,5 @@
 import {MINUTES_IN_HOUR} from "../consts";
+import moment from "moment";
 
 export const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -15,4 +16,8 @@ export const normalizeDuration = (duration) => {
   }
 
   return `${hours}h ${minutes}m`;
+};
+
+export const formatReleaseDate = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
 };

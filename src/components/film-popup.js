@@ -1,11 +1,11 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {EMOGIES, TypesButton} from "../consts";
-import {formatReleaseDate} from "../utils/common";
+import {formatReleaseDate, formatDateOfComment} from "../utils/common";
 
 const createCommentsMarkup = (comments) => {
   return comments
     .map((comment) => {
-      const commentDate = `${comment.date.getDay()}.${comment.date.getMonth()}.${comment.date.getFullYear()}`;
+      const commentDate = formatDateOfComment(comment.date);
 
       return (
         `<li class="film-details__comment">

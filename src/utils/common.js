@@ -22,6 +22,10 @@ export const formatReleaseDate = (date) => {
   return moment(date).format(`DD MMMM YYYY`);
 };
 
-export const formatReaseYear = (date) => {
+export const formatReleaseYear = (date) => {
   return moment(date).format(`YYYY`);
+};
+
+export const formatDateOfComment = (date) => {
+  return moment(date).format(`YYYY/MM/DD H:mm`);
 };

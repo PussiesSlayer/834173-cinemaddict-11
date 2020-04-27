@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component";
 import {TypesButton} from "../consts";
-import {normalizeDuration, formatReaseYear} from "../utils/common";
+import {normalizeDuration, formatReleaseYear} from "../utils/common";
 
 const createButtonMarkup = (name, isChecked) => {
   const setNameForClass = () => {
@@ -30,7 +30,7 @@ const createButtonMarkup = (name, isChecked) => {
 
 const createFilmCardTemplate = (film, comments) => {
   const {name, poster, description, userRating, date, duration, genres} = film;
-  const year = formatReaseYear(date);
+  const year = formatReleaseYear(date);
 
   const watchlistButton = createButtonMarkup(TypesButton.WATCHLIST, film.isWantToWatch);
   const watchedButton = createButtonMarkup(TypesButton.WATCHED, film.isWatched);

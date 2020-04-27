@@ -4,6 +4,8 @@ import {EMOGIES, MONTH_NAMES, TypesButton} from "../consts";
 const createCommentsMarkup = (comments) => {
   return comments
     .map((comment) => {
+      const commentDate = `${comment.date.getDay()}.${comment.date.getMonth()}.${comment.date.getFullYear()}`;
+
       return (
         `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
@@ -13,7 +15,7 @@ const createCommentsMarkup = (comments) => {
               <p class="film-details__comment-text">${comment.message}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.userName}</span>
-                <span class="film-details__comment-day">${comment.date}</span>
+                <span class="film-details__comment-day">${commentDate}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>

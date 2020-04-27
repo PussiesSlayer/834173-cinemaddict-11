@@ -71,7 +71,7 @@ const getRandomDate = () => {
 const generateComment = () => {
   return {
     emoji: getRandomValue(Emogies),
-    date: `11.12.2019`,
+    date: getRandomDate(),
     message: getRandomDescription(),
     userName: `Kevin`,
   };

@@ -33,10 +33,10 @@ export default class MovieController {
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    // this._filmPopupComponent.setCloseButtonClickHandler(() => {
-    //   this._hideFilmPopup();
-    //   document.removeEventListener(`keydown`, this._onEscKeyDown);
-    // });
+    this._filmPopupComponent.setCloseButtonClickHandler(() => {
+      this._hideFilmPopup();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    });
 
     const changeWatchlistStatus = () => {
       this._onDataChange(film, Object.assign({}, film, {
@@ -77,10 +77,10 @@ export default class MovieController {
     this._onViewChange();
     appendChildComponent(footerElement, this._filmPopupComponent);
 
-    this._filmPopupComponent.setCloseButtonClickHandler(() => {
-      this._hideFilmPopup();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    });
+    // this._filmPopupComponent.setCloseButtonClickHandler(() => {
+    //   this._hideFilmPopup();
+    //   document.removeEventListener(`keydown`, this._onEscKeyDown);
+    // });
 
     this._mode = PopupStatus.SHOW;
   }

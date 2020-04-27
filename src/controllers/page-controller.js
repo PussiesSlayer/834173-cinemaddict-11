@@ -43,6 +43,8 @@ export default class PageController {
     this._films = [];
     this._comments = [];
     this._showedFilmControllers = [];
+    this._topRatedFilmControllers = [];
+    this._mostCommentedFilmsControllers = [];
 
     this._showingFilmsCount = CARDS_COUNT_DEFAULT;
 
@@ -120,10 +122,12 @@ export default class PageController {
     render(container, mostCommentedComponent, RenderPosition.BEFOREEND);
 
     const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
-    renderFilms(filmsTopRatedContainerElement, topRatedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange, onViewChange);
+    const newTopRatedFilms = renderFilms(filmsTopRatedContainerElement, topRatedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange, onViewChange);
+    this._topRatedFilmControllers = this._topRatedFilmControllers.concat(newTopRatedFilms);
 
     const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
-    renderFilms(filmsMostCommentedContainerElement, mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange, onViewChange);
+    const newMostCommentedFilms = renderFilms(filmsMostCommentedContainerElement, mostCommentedFilms.slice(0, CARDS_COUNT_SPECIAL), comments, onDataChange, onViewChange);
+    this._mostCommentedFilmsControllers = this._mostCommentedFilmsControllers.concat(newMostCommentedFilms);
   }
 
   _onSortTypeChange(sortType) {
@@ -150,10 +154,18 @@ export default class PageController {
 
     this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
 
-    this._showedFilmControllers[index].render(this._films[index], this._comments);
+    [...this._showedFilmControllers, ...this._topRatedFilmControllers, ...this._mostCommentedFilmsControllers]
+      .forEach((it) => {
+        const film = it._filmComponent._film;
+
+        if (film === oldData) {
+          it.render(newData, this._comments);
+        }
+      });
   }
 
   _onViewChange() {
-    this._showedFilmControllers.forEach((it) => it.setDefaultView());
+    [...this._showedFilmControllers, ...this._topRatedFilmControllers, ...this._mostCommentedFilmsControllers]
+      .forEach((it) => it.setDefaultView());
   }
 }

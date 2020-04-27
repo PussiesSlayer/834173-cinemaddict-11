@@ -1,9 +1,12 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {EMOGIES, MONTH_NAMES, TypesButton} from "../consts";
+import {EMOGIES, TypesButton} from "../consts";
+import {formatReleaseDate, formatDateOfComment} from "../utils/common";
 
 const createCommentsMarkup = (comments) => {
   return comments
     .map((comment) => {
+      const commentDate = formatDateOfComment(comment.date);
+
       return (
         `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
@@ -13,7 +16,7 @@ const createCommentsMarkup = (comments) => {
               <p class="film-details__comment-text">${comment.message}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.userName}</span>
-                <span class="film-details__comment-day">${comment.date}</span>
+                <span class="film-details__comment-day">${commentDate}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>
@@ -105,13 +108,14 @@ const createFilmPopupTemplate = (film, comments, options = {}) => {
     actors,
     country,
   } = film;
+
   const {chosenEmoji} = options;
 
   const genreTitle = genres.length > 1 ? `Genres` : `Genre`;
   const commentsMarkup = createCommentsMarkup(comments);
   const newCommentMarkup = createNewCommentMarkup(chosenEmoji);
 
-  const fullDate = `${date.getDay()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+  const releaseDate = formatReleaseDate(date);
 
   const watchlistCheckbox = createCheckboxMarkup(TypesButton.WATCHLIST, film.isWantToWatch);
   const watchedCheckbox = createCheckboxMarkup(TypesButton.WATCHED, film.isWatched);
@@ -158,7 +162,7 @@ const createFilmPopupTemplate = (film, comments, options = {}) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${fullDate}</td>
+              <td class="film-details__cell">${releaseDate}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>

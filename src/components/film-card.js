@@ -28,8 +28,8 @@ const createButtonMarkup = (name, isChecked) => {
   );
 };
 
-const createFilmCardTemplate = (film, comments) => {
-  const {name, poster, description, userRating, date, duration, genres} = film;
+const createFilmCardTemplate = (film) => {
+  const {name, poster, description, userRating, date, duration, genres, comments} = film;
   const year = formatReleaseYear(date);
 
   const watchlistButton = createButtonMarkup(TypesButton.WATCHLIST, film.isWantToWatch);
@@ -59,14 +59,13 @@ const createFilmCardTemplate = (film, comments) => {
 };
 
 export default class FilmCard extends AbstractComponent {
-  constructor(film, comments) {
+  constructor(film) {
     super();
     this._film = film;
-    this._comments = comments;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film, this._comments);
+    return createFilmCardTemplate(this._film);
   }
 
   setOpenPopupClickHandler(handler) {

@@ -21,12 +21,12 @@ export default class MovieController {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
-  render(film, comments) {
+  render(film) {
     const oldFlmComponent = this._filmComponent;
     const oldFilmPopupComponent = this._filmPopupComponent;
 
-    this._filmPopupComponent = new FilmPopupComponent(film, comments);
-    this._filmComponent = new FilmCardComponent(film, comments);
+    this._filmPopupComponent = new FilmPopupComponent(film);
+    this._filmComponent = new FilmCardComponent(film);
 
     this._filmComponent.setOpenPopupClickHandler(() => {
       this._showFilmPopup();
@@ -76,11 +76,6 @@ export default class MovieController {
 
     this._onViewChange();
     appendChildComponent(footerElement, this._filmPopupComponent);
-
-    // this._filmPopupComponent.setCloseButtonClickHandler(() => {
-    //   this._hideFilmPopup();
-    //   document.removeEventListener(`keydown`, this._onEscKeyDown);
-    // });
 
     this._mode = PopupStatus.SHOW;
   }

@@ -4,7 +4,7 @@ import FooterStatisticComponent from "./components/footer-statistic";
 import FiltersComponent from "./components/filters";
 import FilmsBlockComponent from "./components/films-block";
 import {RenderPosition, render} from "./utils/render";
-import {films, generateComments} from "./mock/film-card";
+import {films} from "./mock/film-card";
 import {filters} from "./mock/filters";
 import PageController from "./controllers/page-controller";
 
@@ -22,7 +22,7 @@ const filmsBlock = new FilmsBlockComponent();
 const pageController = new PageController(filmsBlock);
 
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
-pageController.render(films, generateComments());
+pageController.render(films);
 
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 

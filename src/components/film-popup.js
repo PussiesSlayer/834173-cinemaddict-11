@@ -30,11 +30,11 @@ const createInstallEmojiMarkup = (emogies, chosenEmoji) => {
   return emogies
     .map((emoji) => {
       return (
-        `<input 
+        `<input
           class="film-details__emoji-item visually-hidden"
-          name="comment-emoji" 
-          type="radio" 
-          id="emoji-${emoji}" 
+          name="comment-emoji"
+          type="radio"
+          id="emoji-${emoji}"
           value="${emoji}"
           ${chosenEmoji === emoji ? `checked` : ``}
           >
@@ -92,7 +92,7 @@ const createCheckboxMarkup = (name, isChecked) => {
   );
 };
 
-const createFilmPopupTemplate = (film, comments, options = {}) => {
+const createFilmPopupTemplate = (film, options = {}) => {
   const {
     name,
     poster,
@@ -107,6 +107,7 @@ const createFilmPopupTemplate = (film, comments, options = {}) => {
     ratingByAge,
     actors,
     country,
+    comments
   } = film;
 
   const {chosenEmoji} = options;
@@ -213,10 +214,9 @@ const createFilmPopupTemplate = (film, comments, options = {}) => {
 };
 
 export default class FilmPopup extends AbstractSmartComponent {
-  constructor(film, comments) {
+  constructor(film) {
     super();
     this._film = film;
-    this._comments = comments;
     this._chosenEmoji = null;
 
     this._closeHandler = null;
@@ -228,7 +228,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFilmPopupTemplate(this._film, this._comments, {
+    return createFilmPopupTemplate(this._film, {
       chosenEmoji: this._chosenEmoji,
     });
   }

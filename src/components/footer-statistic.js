@@ -1,13 +1,21 @@
 import AbstractComponent from "./abstract-component";
 
-const createFooterStatisticTemplate = () => {
+const createFooterStatisticTemplate = (films) => {
+  const filmsAmount = films.length;
+
   return (
-    `<p>130 291 movies inside</p>`
+    `<p>${filmsAmount} movies inside</p>`
   );
 };
 
 export default class FooterStatistic extends AbstractComponent {
+  constructor(films) {
+    super();
+
+    this._films = films;
+  }
+
   getTemplate() {
-    return createFooterStatisticTemplate();
+    return createFooterStatisticTemplate(this._films);
   }
 }

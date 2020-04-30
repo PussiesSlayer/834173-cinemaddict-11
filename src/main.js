@@ -26,4 +26,4 @@ pageController.render(films);
 
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 
-render(footerStatisticElement, new FooterStatisticComponent(), RenderPosition.BEFOREEND);
+render(footerStatisticElement, new FooterStatisticComponent(films), RenderPosition.BEFOREEND);

@@ -1,6 +1,6 @@
 import FilmCardComponent from "../components/film-card";
 import FilmPopupComponent from "../components/film-popup";
-import {appendChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
+import {appendChildComponent, removeChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
 
 const PopupStatus = {
   SHOW: `show`,
@@ -81,11 +81,15 @@ export default class MovieController {
   }
 
   _hideFilmPopup() {
-    if (this._filmPopupComponent) {
-      this._filmPopupComponent.reset();
-      remove(this._filmPopupComponent);
-      this._mode = PopupStatus.HIDE;
+    const footerElement = document.querySelector(`.footer`);
+
+    this._filmPopupComponent.reset();
+
+    if (document.contains(this._filmPopupComponent.getElement())) {
+      removeChildComponent(footerElement, this._filmPopupComponent);
     }
+
+    this._mode = PopupStatus.HIDE;
   }
 
   _onEscKeyDown(evt) {

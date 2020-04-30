@@ -233,10 +233,28 @@ export default class FilmPopup extends AbstractSmartComponent {
     });
   }
 
-  setCloseButtonClickHandler(handler) {
-    const closePopupButton = this.getElement().querySelector(`.film-details__close-btn`);
+  recoveryListeners() {
+    this.setCloseButtonClickHandler(this._closeHandler);
+    this._setEmojiRadioChangeHandler();
+    this.setAddWatchlistCheckboxChangeHandler(this._addWatchlistCheckboxChangeHandler);
+    this.setWatchedCheckboxChangeHandler(this._watchedCheckboxChangeHandler);
+    this.setFavoriteCheckboxChangeHandler(this._favoriteCheckboxChangeHandler);
+  }
 
-    closePopupButton.addEventListener(`click`, handler);
+  rerender() {
+    super.rerender();
+  }
+
+  reset() {
+    this._chosenEmoji = null;
+
+    this.rerender();
+  }
+
+  setCloseButtonClickHandler(handler) {
+    const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
+
+    closeButton.addEventListener(`click`, handler);
 
     this._closeHandler = handler;
   }
@@ -272,23 +290,5 @@ export default class FilmPopup extends AbstractSmartComponent {
         this.rerender();
       });
     });
-  }
-
-  recoveryListeners() {
-    this._setEmojiRadioChangeHandler();
-    this.setCloseButtonClickHandler(this._closeHandler);
-    this.setAddWatchlistCheckboxChangeHandler(this._addWatchlistCheckboxChangeHandler);
-    this.setWatchedCheckboxChangeHandler(this._watchedCheckboxChangeHandler);
-    this.setFavoriteCheckboxChangeHandler(this._favoriteCheckboxChangeHandler);
-  }
-
-  rerender() {
-    super.rerender();
-  }
-
-  reset() {
-    this._chosenEmoji = null;
-
-    this.rerender();
   }
 }

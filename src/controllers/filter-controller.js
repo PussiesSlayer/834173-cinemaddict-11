@@ -1,6 +1,7 @@
-import FilterComponet from "../components/filters";
+import FilterComponent from "../components/filters";
 import {FilterType} from "../consts";
 import {replace, render, RenderPosition} from "../utils/render";
+import {getFilmsByFilms} from "../utils/filter";
 
 export default class FilterController {
   constructor(container, filmsModel) {
@@ -22,14 +23,15 @@ export default class FilterController {
     const filters = Object.values(FilterType).map((type) => {
       return {
         title: type,
-        count: allFilms.length,
+        count: getFilmsByFilms(allFilms, type).length,
         checked: type === this._activeFilterType,
       };
     });
 
     const oldComponent = this._filterComponent;
 
-    this._filterComponent = new FilterComponet(filters);
+    this._filterComponent = new FilterComponent(filters);
+    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);
@@ -38,7 +40,12 @@ export default class FilterController {
     }
   }
 
-  _onFilterChange() {}
+  _onFilterChange(filterType) {
+    // this._filmsModel.setFilter(FilterType);
+    this._activeFilterType = filterType;
+  }
 
-  _onDataChange() {}
+  _onDataChange() {
+    this.render();
+  }
 }

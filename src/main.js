@@ -1,13 +1,14 @@
 import UserRatingComponent from "./components/user-rating";
 import MenuComponent from "./components/menu";
 import FooterStatisticComponent from "./components/footer-statistic";
-import FiltersComponent from "./components/filters";
+// import FiltersComponent from "./components/filters";
 import FilmsBlockComponent from "./components/films-block";
+import PageController from "./controllers/page-controller";
+import FilterController from "./controllers/filter-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render} from "./utils/render";
 import {films} from "./mock/film-card";
 import {filters} from "./mock/filters";
-import PageController from "./controllers/page-controller";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);
@@ -20,7 +21,10 @@ filmsModel.setFilms(films);
 
 render(siteHeaderElement, new UserRatingComponent(), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
-render(siteMenuElement.getElement(), new FiltersComponent(filters), RenderPosition.AFTERBEGIN);
+
+const filterController = new FilterController(siteMenuElement.getElement(), filmsModel);
+// render(siteMenuElement.getElement(), new FiltersComponent(filters), RenderPosition.AFTERBEGIN);
+filterController.render();
 
 const filmsBlock = new FilmsBlockComponent();
 const pageController = new PageController(filmsBlock, filmsModel);

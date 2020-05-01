@@ -33,3 +33,10 @@ export const TypesButton = {
   WATCHED: `watched`,
   FAVORITE: `favorite`,
 };
+
+export const FilterType = {
+  ALL: `All`,
+  WATCHLIST: `Watchlist`,
+  HISTORY: `History`,
+  FAVORITES: `Favorites`,
+};

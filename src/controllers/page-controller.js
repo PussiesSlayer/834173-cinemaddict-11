@@ -56,6 +56,9 @@ export default class PageController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -83,6 +86,17 @@ export default class PageController {
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
     this._showingFilmsCount = this._showedFilmControllers.length;
+  }
+
+  _removeFilms() {
+    this._showedFilmControllers.forEach((filmController) => filmController.destroy());
+    this._showedFilmControllers = [];
+  }
+
+  _updateFilms(count) {
+    this._removeFilms();
+    this._renderFilms(this._filmsModel.getFilms().slice(0, count));
+    this._renderShowMoreButton();
   }
 
   _renderShowMoreButton() {
@@ -172,5 +186,9 @@ export default class PageController {
   _onViewChange() {
     [...this._showedFilmControllers, ...this._topRatedFilmControllers, ...this._mostCommentedFilmsControllers]
       .forEach((it) => it.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._updateFilms(CARDS_COUNT_DEFAULT);
   }
 }

@@ -71,6 +71,12 @@ export default class MovieController {
     }
   }
 
+  destroy() {
+    remove(this._filmComponent);
+    remove(this._filmPopupComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
   _showFilmPopup() {
     const footerElement = document.querySelector(`.footer`);
 

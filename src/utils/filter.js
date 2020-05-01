@@ -12,7 +12,7 @@ export const getWantToWatchFilms = (films) => {
   return films.filter((film) => film.isWantToWatch);
 };
 
-export const getFilmsByFilms = (films, filterType) => {
+export const getFilmsByFilter = (films, filterType) => {
 
   switch (filterType) {
     case FilterType.ALL:

@@ -1,5 +1,6 @@
 import FilmCardComponent from "../components/film-card";
 import FilmPopupComponent from "../components/film-popup";
+import CommentsComponent from "../components/comments";
 import {appendChildComponent, removeChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
 
 const PopupStatus = {
@@ -13,6 +14,7 @@ export default class MovieController {
 
     this._filmPopupComponent = null;
     this._filmComponent = null;
+    this._commentsComponent = null;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
 
@@ -24,9 +26,11 @@ export default class MovieController {
   render(film) {
     const oldFlmComponent = this._filmComponent;
     const oldFilmPopupComponent = this._filmPopupComponent;
+    const oldCommentsComponent = this._commentsComponent;
 
     this._filmPopupComponent = new FilmPopupComponent(film);
     this._filmComponent = new FilmCardComponent(film);
+    this._commentsComponent = new CommentsComponent(film.comments);
 
     this._filmComponent.setOpenPopupClickHandler(() => {
       this._showFilmPopup();
@@ -63,7 +67,7 @@ export default class MovieController {
     this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
     this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
 
-    if (oldFlmComponent && oldFilmPopupComponent) {
+    if (oldFlmComponent && oldFilmPopupComponent && oldCommentsComponent) {
       replace(this._filmComponent, oldFlmComponent);
       replace(this._filmPopupComponent, oldFilmPopupComponent);
     } else {
@@ -74,25 +78,32 @@ export default class MovieController {
   destroy() {
     remove(this._filmComponent);
     remove(this._filmPopupComponent);
+    remove(this._commentsComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _showFilmPopup() {
     const footerElement = document.querySelector(`.footer`);
+    const commentsContainer = this._filmPopupComponent.getElement().querySelector(`.form-details__bottom-container`);
 
     this._onViewChange();
     appendChildComponent(footerElement, this._filmPopupComponent);
+
+    render(commentsContainer, this._commentsComponent, RenderPosition.BEFOREEND);
 
     this._mode = PopupStatus.SHOW;
   }
 
   _hideFilmPopup() {
     const footerElement = document.querySelector(`.footer`);
+    const commentsContainer = this._filmPopupComponent.getElement().querySelector(`.form-details__bottom-container`);
 
     this._filmPopupComponent.reset();
+    this._commentsComponent.reset();
 
     if (document.contains(this._filmPopupComponent.getElement())) {
       removeChildComponent(footerElement, this._filmPopupComponent);
+      removeChildComponent(commentsContainer, this._commentsComponent);
     }
 
     this._mode = PopupStatus.HIDE;

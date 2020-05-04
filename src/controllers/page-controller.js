@@ -37,10 +37,11 @@ const getSortedFilms = (films, sortType, from, to) => {
 };
 
 export default class PageController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, commentsModel) {
     this._container = container;
 
     this._filmsModel = filmsModel;
+    this._commentsModel = commentsModel;
     this._showedFilmControllers = [];
     this._topRatedFilmControllers = [];
     this._mostCommentedFilmsControllers = [];
@@ -65,6 +66,7 @@ export default class PageController {
   render() {
     const container = this._container.getElement();
     const films = this._filmsModel.getFilms();
+    const comments = this._commentsModel.getComments();
 
     const filmsListWrap = container.querySelector(`.films-list`);
 

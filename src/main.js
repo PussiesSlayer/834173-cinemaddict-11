@@ -6,6 +6,7 @@ import FilmsBlockComponent from "./components/films-block";
 import PageController from "./controllers/page-controller";
 import FilterController from "./controllers/filter-controller";
 import FilmsModel from "./models/movies";
+import CommentsModel from "./models/comments";
 import {RenderPosition, render} from "./utils/render";
 import {films} from "./mock/film-card";
 import {filters} from "./mock/filters";
@@ -19,6 +20,11 @@ const siteMenuElement = new MenuComponent();
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
+const commentsModel = new CommentsModel();
+films.forEach((film) => {
+  commentsModel.setComments(film.comments);
+});
+
 render(siteHeaderElement, new UserRatingComponent(), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
@@ -27,7 +33,7 @@ const filterController = new FilterController(siteMenuElement.getElement(), film
 filterController.render();
 
 const filmsBlock = new FilmsBlockComponent();
-const pageController = new PageController(filmsBlock, filmsModel);
+const pageController = new PageController(filmsBlock, filmsModel, commentsModel);
 
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 pageController.render();

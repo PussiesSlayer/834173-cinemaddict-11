@@ -21,9 +21,6 @@ const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
 const commentsModel = new CommentsModel();
-films.forEach((film) => {
-  commentsModel.setComments(film.comments);
-});
 
 render(siteHeaderElement, new UserRatingComponent(), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);

@@ -66,7 +66,6 @@ export default class PageController {
   render() {
     const container = this._container.getElement();
     const films = this._filmsModel.getFilms();
-    const comments = this._commentsModel.getComments();
 
     const filmsListWrap = container.querySelector(`.films-list`);
 
@@ -176,6 +175,10 @@ export default class PageController {
           }
         });
     }
+  }
+
+  _onCommentsDataChange() {
+    this._commentsModel.setComments();
   }
 
   _onViewChange() {

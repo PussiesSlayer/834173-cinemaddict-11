@@ -1,6 +1,5 @@
 import CommentsComponent from "../components/comments";
-import CommentsModel from "../models/comments";
-import {appendChildComponent, removeChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
+import {remove, render, replace, RenderPosition} from "../utils/render";
 
 export default class CommentsController {
   constructor(container, onCommentsDataChange) {

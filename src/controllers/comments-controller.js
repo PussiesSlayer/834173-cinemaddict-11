@@ -20,6 +20,13 @@ export default class CommentsController {
       this._onCommentsDataChange(comments[i], null);
     });
 
+    this._commentsComponent.setSubmitHandler((evt) => {
+      evt.preventDefault();
+      const data = this._commentsComponent.getData();
+      // this._onCommentsDataChange(null, data);
+      console.log(data);
+    });
+
     if (oldCommentsComponent) {
       replace(this._commentsComponent, oldCommentsComponent);
     } else {
@@ -29,5 +36,6 @@ export default class CommentsController {
 
   destroy() {
     remove(this._commentsComponent);
+    this._commentsComponent.removeEvents();
   }
 }

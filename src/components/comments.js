@@ -85,6 +85,15 @@ const createCommentsTemplate = (comments, options = {}) => {
   );
 };
 
+const parseFormData = (formData) => {
+  return {
+    emoji: formData.get(`comment-emoji`),
+    date: new Date(),
+    message: formData.get(`comment`),
+    userName: `Anonymous`,
+  };
+};
+
 export default class Comments extends AbstractSmartComponent {
   constructor(comments) {
     super();
@@ -93,6 +102,14 @@ export default class Comments extends AbstractSmartComponent {
     this._chosenEmoji = null;
 
     this._deleteButtonCLickHandler = null;
+    this._submitHandler = null;
+
+    this._pressedButtons = {};
+    this._keyUpHandler = () => {
+      this._pressedButtons = {};
+    };
+
+    this._submitGenerateHandler = null;
 
     this._setEmojiRadioChangeHandler();
   }
@@ -106,6 +123,7 @@ export default class Comments extends AbstractSmartComponent {
   recoveryListeners() {
     this._setEmojiRadioChangeHandler();
     this.setDeleteButtonClickHandler(this._deleteButtonCLickHandler);
+    this.setSubmitHandler(this._submitInitialHandler);
   }
 
   rerender() {
@@ -122,6 +140,13 @@ export default class Comments extends AbstractSmartComponent {
     super.removeElement();
   }
 
+  getData() {
+    const form = document.querySelector(`form.film-details__inner`);
+    const formData = new FormData(form);
+
+    return parseFormData(formData);
+  }
+
   setDeleteButtonClickHandler(handler) {
     this.getElement()
       .querySelectorAll(`.film-details__comment-delete`)
@@ -132,6 +157,36 @@ export default class Comments extends AbstractSmartComponent {
     this._deleteButtonCLickHandler = handler;
   }
 
+  removeEvents() {
+    document.removeEventListener(`keydown`, this._submitGeneratedHandler);
+    document.removeEventListener(`keyup`, this._keyUpHandler);
+  }
+
+  setSubmitHandler(handler) {
+    this._submitGeneratedHandler = this._getSubmitHandler(handler);
+    this._submitInitialHandler = handler;
+
+    document.addEventListener(`keydown`, this._submitGeneratedHandler);
+    document.addEventListener(`keyup`, this._keyUpHandler);
+  }
+
+  _getSubmitHandler(handler) {
+    return (evt) => {
+      const isCtrlKey = evt.key === `Meta` || evt.key === `Control`;
+      const isEnterKey = evt.key === `Enter`;
+
+      if (isEnterKey) {
+        this._pressedButtons.enter = true;
+      } else if (isCtrlKey) {
+        this._pressedButtons.ctrl = true;
+      }
+
+      if (this._pressedButtons.ctrl && this._pressedButtons.enter) {
+        handler(evt);
+      }
+    };
+  }
+
   _setEmojiRadioChangeHandler() {
     const emogies = this.getElement().querySelectorAll(`.film-details__emoji-item`);
 
@@ -139,6 +194,7 @@ export default class Comments extends AbstractSmartComponent {
       emoji.addEventListener(`change`, (evt) => {
         this._chosenEmoji = evt.target.value;
 
+        this.removeEvents();
         this.rerender();
       });
     });

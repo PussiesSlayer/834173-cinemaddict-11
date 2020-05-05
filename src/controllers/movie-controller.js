@@ -34,6 +34,8 @@ export default class MovieController {
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
+
+    this._commentsModel.setCommentsDataChangeHandlers(this._onCommentsDataChange);
   }
 
   render(film) {
@@ -157,6 +159,7 @@ export default class MovieController {
 
     if (isEscapeKey) {
       this._hideFilmPopup();
+      this._removeComments();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }

@@ -43,8 +43,7 @@ const createFilmPopupTemplate = (film) => {
     genres,
     ratingByAge,
     actors,
-    country,
-    comments
+    country
   } = film;
 
   const genreTitle = genres.length > 1 ? `Genres` : `Genre`;

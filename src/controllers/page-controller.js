@@ -37,11 +37,12 @@ const getSortedFilms = (films, sortType, from, to) => {
 };
 
 export default class PageController {
-  constructor(container, filmsModel, commentsModel) {
+  constructor(container, filmsModel) {
     this._container = container;
 
     this._filmsModel = filmsModel;
-    this._commentsModel = commentsModel;
+    // this._commentsModel = commentsModel;
+
     this._showedFilmControllers = [];
     this._topRatedFilmControllers = [];
     this._mostCommentedFilmsControllers = [];
@@ -175,10 +176,6 @@ export default class PageController {
           }
         });
     }
-  }
-
-  _onCommentsDataChange() {
-    this._commentsModel.setComments();
   }
 
   _onViewChange() {

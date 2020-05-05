@@ -92,6 +92,8 @@ export default class Comments extends AbstractSmartComponent {
     this._comments = comments;
     this._chosenEmoji = null;
 
+    this._deleteButtonCLickHandler = null;
+
     this._setEmojiRadioChangeHandler();
   }
 
@@ -103,6 +105,7 @@ export default class Comments extends AbstractSmartComponent {
 
   recoveryListeners() {
     this._setEmojiRadioChangeHandler();
+    this.setDeleteButtonClickHandler(this._deleteButtonCLickHandler);
   }
 
   rerender() {
@@ -113,6 +116,20 @@ export default class Comments extends AbstractSmartComponent {
     this._chosenEmoji = null;
 
     this.rerender();
+  }
+
+  removeElement() {
+    super.removeElement();
+  }
+
+  setDeleteButtonClickHandler(handler) {
+    this.getElement()
+      .querySelectorAll(`.film-details__comment-delete`)
+      .forEach((button, i) => {
+        button.addEventListener(`click`, (evt) => handler(evt, i));
+      });
+
+    this._deleteButtonCLickHandler = handler;
   }
 
   _setEmojiRadioChangeHandler() {

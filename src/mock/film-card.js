@@ -40,6 +40,17 @@ const Genres = [
   `horror`,
 ];
 
+const UserNames = [
+  `Harry Potter`,
+  `Ginny`,
+  `Ronald`,
+  `Hermione`,
+  `Hedwig`,
+  `Hargid`,
+  `Voldemort`,
+  `Albus Dumbldore`,
+];
+
 const convertNameToPoster = (string) => {
   return string.toLowerCase().split(` `).join(`-`);
 };
@@ -70,10 +81,11 @@ const getRandomDate = () => {
 
 const generateComment = () => {
   return {
+    id: String(Date() + Math.random()),
     emoji: getRandomValue(Emogies),
     date: getRandomDate(),
     message: getRandomDescription(),
-    userName: `Kevin`,
+    userName: getRandomValue(UserNames),
   };
 };
 

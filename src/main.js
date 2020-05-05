@@ -20,8 +20,6 @@ const siteMenuElement = new MenuComponent();
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
-const commentsModel = new CommentsModel();
-
 render(siteHeaderElement, new UserRatingComponent(), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
@@ -30,7 +28,7 @@ const filterController = new FilterController(siteMenuElement.getElement(), film
 filterController.render();
 
 const filmsBlock = new FilmsBlockComponent();
-const pageController = new PageController(filmsBlock, filmsModel, commentsModel);
+const pageController = new PageController(filmsBlock, filmsModel);
 
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 pageController.render();

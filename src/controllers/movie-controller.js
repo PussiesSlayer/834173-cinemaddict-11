@@ -165,9 +165,10 @@ export default class MovieController {
   }
 
   _onCommentsDataChange(oldData, newData) {
-    // const isSuccess = this._commentsModel.updateComments(oldData.id, newData);
-
-    if (newData === null) {
+    if (oldData === null) {
+      this._commentsModel.addComment(newData);
+      this._updateComments(this._commentsModel.getComments());
+    } else if (newData === null) {
       this._commentsModel.removeComment(oldData.id);
       this._updateComments(this._commentsModel.getComments());
     }

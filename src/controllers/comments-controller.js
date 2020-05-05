@@ -23,8 +23,7 @@ export default class CommentsController {
     this._commentsComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       const data = this._commentsComponent.getData();
-      // this._onCommentsDataChange(null, data);
-      console.log(data);
+      this._onCommentsDataChange(null, data);
     });
 
     if (oldCommentsComponent) {

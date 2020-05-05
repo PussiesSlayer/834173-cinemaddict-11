@@ -1,6 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateOfComment} from "../utils/common";
 import {EMOGIES} from "../consts";
+import {encode} from "he";
 
 const createCommentsMarkup = (comments) => {
   return comments
@@ -89,7 +90,7 @@ const parseFormData = (formData) => {
   return {
     emoji: formData.get(`comment-emoji`),
     date: new Date(),
-    message: formData.get(`comment`),
+    message: encode(formData.get(`comment`)),
     userName: `Anonymous`,
   };
 };
@@ -102,7 +103,6 @@ export default class Comments extends AbstractSmartComponent {
     this._chosenEmoji = null;
 
     this._deleteButtonCLickHandler = null;
-    this._submitHandler = null;
 
     this._pressedButtons = {};
     this._keyUpHandler = () => {
@@ -158,15 +158,15 @@ export default class Comments extends AbstractSmartComponent {
   }
 
   removeEvents() {
-    document.removeEventListener(`keydown`, this._submitGeneratedHandler);
+    document.removeEventListener(`keydown`, this._submitGenerateHandler);
     document.removeEventListener(`keyup`, this._keyUpHandler);
   }
 
   setSubmitHandler(handler) {
-    this._submitGeneratedHandler = this._getSubmitHandler(handler);
+    this._submitGenerateHandler = this._getSubmitHandler(handler);
     this._submitInitialHandler = handler;
 
-    document.addEventListener(`keydown`, this._submitGeneratedHandler);
+    document.addEventListener(`keydown`, this._submitGenerateHandler);
     document.addEventListener(`keyup`, this._keyUpHandler);
   }
 

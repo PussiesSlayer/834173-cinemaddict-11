@@ -40,6 +40,17 @@ const Genres = [
   `horror`,
 ];
 
+const UserNames = [
+  `Harry Potter`,
+  `Ginny`,
+  `Ronald`,
+  `Hermione`,
+  `Hedwig`,
+  `Hargid`,
+  `Voldemort`,
+  `Albus Dumbldore`,
+];
+
 const convertNameToPoster = (string) => {
   return string.toLowerCase().split(` `).join(`-`);
 };
@@ -70,10 +81,11 @@ const getRandomDate = () => {
 
 const generateComment = () => {
   return {
+    id: String(Date() + Math.random()),
     emoji: getRandomValue(Emogies),
     date: getRandomDate(),
     message: getRandomDescription(),
-    userName: `Kevin`,
+    userName: getRandomValue(UserNames),
   };
 };
 
@@ -97,6 +109,7 @@ const generateFilm = () => {
   const name = getRandomValue(FilmsNames);
 
   return {
+    id: String(Date() + Math.random()),
     name,
     originalName: name,
     poster: `images/posters/${convertNameToPoster(name)}.jpg`,
@@ -113,6 +126,7 @@ const generateFilm = () => {
     isFavorite: Math.random() > 0.5,
     isWatched: Math.random() > 0.5,
     isWantToWatch: Math.random() > 0.5,
+    comments: generateComments(),
   };
 };
 
@@ -124,4 +138,4 @@ const generateFilms = (count) => {
 
 const films = generateFilms(CARDS_COUNT);
 
-export {films, generateComments};
+export {films};

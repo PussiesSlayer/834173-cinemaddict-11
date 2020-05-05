@@ -8,6 +8,7 @@ const createFilterMarkup = (filter, isChecked) => {
     `<a href="#${title.toLowerCase()}"
       class="main-navigation__item 
       ${isChecked ? `main-navigation__item--active` : ``}"
+      data-filter-type="${title}"
      >
      ${isAllFilter ? `${title} movies` : title}
      ${isAllFilter ? `` : `<span class="main-navigation__item-count">${count}</span>`}
@@ -17,7 +18,7 @@ const createFilterMarkup = (filter, isChecked) => {
 
 const createFiltersTemplate = (filters) => {
   const filterMarkup = filters
-    .map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
+    .map((it) => createFilterMarkup(it, it.checked)).join(`\n`);
 
   return (
     `<div class="main-navigation__items">
@@ -34,5 +35,18 @@ export default class Filters extends AbstractComponent {
 
   getTemplate() {
     return createFiltersTemplate(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      if (evt.target.tagName !== `A` && evt.target.tagName !== `SPAN`) {
+        return;
+      }
+
+      const filterName = evt.target.dataset.filterType;
+      handler(filterName);
+    });
   }
 }

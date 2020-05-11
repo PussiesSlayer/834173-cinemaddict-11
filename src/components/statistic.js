@@ -4,6 +4,8 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import {getUserRank, normalizeDuration, getHours, getMinutes} from "../utils/common";
 import {getWatchedFilms} from "../utils/filter";
 
+const BAR_HEIGHT = 50;
+
 const getTotalDuration = (watchedFilms) => {
   const allDurations = watchedFilms.map((film) => {
     return film.duration;
@@ -12,7 +14,7 @@ const getTotalDuration = (watchedFilms) => {
   return allDurations.reduce((acc, it) => acc + parseFloat(it));
 };
 
-const getFavoriteGenre = (watchedFilms) => {
+const getGenresCounts = (watchedFilms) => {
   let genresCount = {};
 
   watchedFilms.map((film) => {
@@ -24,6 +26,12 @@ const getFavoriteGenre = (watchedFilms) => {
       }
     });
   });
+
+  return genresCount;
+};
+
+const getFavoriteGenre = (watchedFilms) => {
+  const genresCount = getGenresCounts(watchedFilms);
 
   let maxGenreCount = 1;
   let favoriteGenre = ``;
@@ -38,19 +46,21 @@ const getFavoriteGenre = (watchedFilms) => {
   return favoriteGenre;
 };
 
-const renderChart = () => {
-  const BAR_HEIGHT = 50;
-  const statisticCtx = document.querySelector(`.statistic__chart`);
-
+const renderChart = (statisticCtx, watchedFilms) => {
   statisticCtx.height = BAR_HEIGHT * 5;
+
+  const genresCounts = getGenresCounts(watchedFilms);
+
+  const genres = Object.keys(genresCounts);
+  const counts = Object.values(genresCounts);
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`],
+      labels: genres,
       datasets: [{
-        data: [11, 8, 7, 4, 3],
+        data: counts,
         backgroundColor: `#ffe800`,
         hoverBackgroundColor: `#ffe800`,
         anchor: `start`
@@ -172,9 +182,29 @@ export default class Statistic extends AbstractSmartComponent {
     super();
 
     this._films = films;
+
+    this._charts = null;
+
+    this._renderCharts();
   }
 
   getTemplate() {
     return createStatisticTemplate({films: this._films.getFilms()});
   }
+
+  // show() {}
+
+  // recoveryListeners() {}
+
+  // rerender() {}
+
+  _renderCharts() {
+    const element = this.getElement();
+
+    const statisticCtx = element.querySelector(`.statistic__chart`);
+
+    this._charts = renderChart(statisticCtx, this._films.getFilms());
+  }
+
+  // _resetCharts() {}
 }

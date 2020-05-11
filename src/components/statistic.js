@@ -46,8 +46,10 @@ const getFavoriteGenre = (watchedFilms) => {
   return favoriteGenre;
 };
 
-const renderChart = (statisticCtx, watchedFilms) => {
+const renderChart = (statisticCtx, films) => {
   statisticCtx.height = BAR_HEIGHT * 5;
+
+  const watchedFilms = getWatchedFilms(films);
 
   const genresCounts = getGenresCounts(watchedFilms);
 
@@ -192,19 +194,36 @@ export default class Statistic extends AbstractSmartComponent {
     return createStatisticTemplate({films: this._films.getFilms()});
   }
 
-  // show() {}
+  show() {
+    super.show();
 
-  // recoveryListeners() {}
+    this.rerender(this._films);
+  }
 
-  // rerender() {}
+  recoveryListeners() {}
+
+  rerender(films) {
+    this._films = films;
+
+    super.rerender();
+
+    this._renderCharts();
+  }
 
   _renderCharts() {
     const element = this.getElement();
 
     const statisticCtx = element.querySelector(`.statistic__chart`);
 
+    this._resetCharts();
+
     this._charts = renderChart(statisticCtx, this._films.getFilms());
   }
 
-  // _resetCharts() {}
+  _resetCharts() {
+    if (this._charts) {
+      this._charts.destroy();
+      this._charts = null;
+    }
+  }
 }

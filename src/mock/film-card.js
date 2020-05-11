@@ -116,7 +116,7 @@ const generateFilm = () => {
     description: getRandomDescription(),
     userRating: Math.floor(Math.random() * 10),
     date: getRandomDate(),
-    duration: 124,
+    duration: getRandomNumber(60, 180),
     genres: generateGenres(),
     ratingByAge: `18+`,
     director: `Anthony Mann`,

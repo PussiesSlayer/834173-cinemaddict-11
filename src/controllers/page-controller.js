@@ -84,6 +84,7 @@ export default class PageController {
   show() {
     this._container.show();
     this._sortingComponent.show();
+    this._onSortTypeChange(SortType.DEFAULT);
   }
 
   hide() {

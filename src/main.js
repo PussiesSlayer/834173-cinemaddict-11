@@ -45,15 +45,12 @@ statisticComponent.hide();
 siteMenuElement.setStatsClickHandler((evt) => {
   evt.preventDefault();
 
-  console.log(`stats`);
-
   pageController.hide();
   statisticComponent.show();
 });
 
 filterController.setFilterClickHandler(() => {
-  console.log(`filter`);
+  statisticComponent.hide();
 
   pageController.show();
-  statisticComponent.hide();
 });

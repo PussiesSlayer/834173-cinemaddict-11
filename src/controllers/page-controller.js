@@ -81,6 +81,16 @@ export default class PageController {
     this._renderShowMoreButton();
   }
 
+  show() {
+    this._container.show();
+    this._sortingComponent.show();
+  }
+
+  hide() {
+    this._container.hide();
+    this._sortingComponent.hide();
+  }
+
   _renderFilms(films) {
     const container = this._container.getElement();
     const filmsListElement = container.querySelector(`.films-list__container`);

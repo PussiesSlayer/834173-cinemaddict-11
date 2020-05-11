@@ -40,3 +40,20 @@ render(footerStatisticElement, new FooterStatisticComponent(films), RenderPositi
 
 const statisticComponent = new StatisticComponent();
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
+statisticComponent.hide();
+
+siteMenuElement.setStatsClickHandler((evt) => {
+  evt.preventDefault();
+
+  console.log(`stats`);
+
+  pageController.hide();
+  statisticComponent.show();
+});
+
+filterController.setFilterClickHandler(() => {
+  console.log(`filter`);
+
+  pageController.show();
+  statisticComponent.hide();
+});

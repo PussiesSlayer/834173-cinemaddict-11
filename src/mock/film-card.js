@@ -127,6 +127,7 @@ const generateFilm = () => {
     isWatched: Math.random() > 0.5,
     isWantToWatch: Math.random() > 0.5,
     comments: generateComments(),
+    watchedDate: getRandomDate(),
   };
 };
 

@@ -42,11 +42,6 @@ const statisticComponent = new StatisticComponent({films: filmsModel});
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
 statisticComponent.hide();
 
-// временно для удобства
-statisticComponent.show();
-pageController.hide();
-//
-
 siteMenuElement.setStatsClickHandler((evt) => {
   evt.preventDefault();
 

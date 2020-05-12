@@ -3,6 +3,7 @@ import MenuComponent from "./components/menu";
 import FooterStatisticComponent from "./components/footer-statistic";
 // import FiltersComponent from "./components/filters";
 import FilmsBlockComponent from "./components/films-block";
+import StatisticComponent from "./components/statistic";
 import PageController from "./controllers/page-controller";
 import FilterController from "./controllers/filter-controller";
 import FilmsModel from "./models/movies";
@@ -36,3 +37,20 @@ pageController.render();
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 
 render(footerStatisticElement, new FooterStatisticComponent(films), RenderPosition.BEFOREEND);
+
+const statisticComponent = new StatisticComponent({films: filmsModel});
+render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
+statisticComponent.hide();
+
+siteMenuElement.setStatsClickHandler((evt) => {
+  evt.preventDefault();
+
+  pageController.hide();
+  statisticComponent.show();
+});
+
+filterController.setFilterClickHandler(() => {
+  statisticComponent.hide();
+
+  pageController.show();
+});

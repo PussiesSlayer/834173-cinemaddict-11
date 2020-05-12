@@ -40,3 +40,9 @@ export const FilterType = {
   HISTORY: `History`,
   FAVORITES: `Favorites`,
 };
+
+export const UserRank = {
+  NOTICE: `Notice`,
+  FAN: `Fan`,
+  MOVIE_BUFF: `Movie Buff`,
+};

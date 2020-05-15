@@ -131,7 +131,7 @@ const renderChart = (statisticCtx, watchedFilms) => {
   });
 };
 
-const createStatisticTemplate = ({watchedFilms, datePeriod, rank}) => {
+const createStatisticTemplate = (watchedFilms, datePeriod, rank) => {
   const watchedFilmsAmount = watchedFilms.length;
 
   const totalDuration = getTotalDuration(watchedFilms);
@@ -194,7 +194,7 @@ const createStatisticTemplate = ({watchedFilms, datePeriod, rank}) => {
 };
 
 export default class Statistic extends AbstractSmartComponent {
-  constructor({films}) {
+  constructor(films) {
     super();
 
     this._allFilms = films;
@@ -215,7 +215,7 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createStatisticTemplate({watchedFilms: this._filteredFilms, datePeriod: this._currentPeriod, rank: this._rank});
+    return createStatisticTemplate(this._filteredFilms, this._currentPeriod, this._rank);
   }
 
   show() {

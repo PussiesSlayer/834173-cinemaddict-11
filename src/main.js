@@ -20,7 +20,6 @@ const siteMenuElement = new MenuComponent();
 
 const filmsModel = new FilmsModel();
 
-render(siteHeaderElement, new UserRatingComponent(filmsModel.getFilms()), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(siteMenuElement.getElement(), filmsModel);
@@ -33,10 +32,9 @@ render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 
-render(footerStatisticElement, new FooterStatisticComponent(filmsModel.getFilms()), RenderPosition.BEFOREEND);
 
-const statisticComponent = new StatisticComponent({films: filmsModel.getFilms()});
-render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
+// TODO: переписать статистику на контроллер
+const statisticComponent = new StatisticComponent(filmsModel.getFilmsAll());
 statisticComponent.hide();
 
 siteMenuElement.setStatsClickHandler((evt) => {
@@ -55,5 +53,13 @@ filterController.setFilterClickHandler(() => {
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+  })
+  .finally(() => {
+    const allFilms = filmsModel.getFilmsAll();
+
     pageController.render();
+
+    render(siteHeaderElement, new UserRatingComponent(allFilms), RenderPosition.BEFOREEND);
+    render(footerStatisticElement, new FooterStatisticComponent(allFilms), RenderPosition.BEFOREEND);
+    render(siteMainElement, new StatisticComponent(allFilms), RenderPosition.BEFOREEND);
   });

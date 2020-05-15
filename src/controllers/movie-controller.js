@@ -4,6 +4,7 @@ import CommentsController from "../controllers/comments-controller";
 import CommentsModel from "../models/comments";
 import {appendChildComponent, removeChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
 import API from "../api";
+import FilmModel from "../models/movie";
 
 const PopupStatus = {
   SHOW: `show`,
@@ -48,6 +49,7 @@ export default class MovieController {
   render(film) {
 
     // TODO: создать компонент ошибки. При неудачной загрузке комментариев выводить об этом ошибку
+    // TODO: Комментарии. Переделать парсеФромДате;
 
     this._api.getComments(film.id)
       .then((comments) => {
@@ -74,25 +76,31 @@ export default class MovieController {
         });
 
         const changeWatchlistStatus = () => {
-          this._onDataChange(film, Object.assign({}, film, {
-            isWantToWatch: !film.isWantToWatch,
-          }));
+          const newFilm = FilmModel.clone(film);
+
+          newFilm.isWantToWatch = !newFilm.isWantToWatch;
+
+          this._onDataChange(film, newFilm);
 
           this._updateComments(this._comments);
         };
 
         const changeWatchedStatus = () => {
-          this._onDataChange(film, Object.assign({}, film, {
-            isWatched: !film.isWatched,
-          }));
+          const newFilm = FilmModel.clone(film);
+
+          newFilm.isWatched = !newFilm.isWatched;
+
+          this._onDataChange(film, newFilm);
 
           this._updateComments(this._comments);
         };
 
         const changeFavoriteStatus = () => {
-          this._onDataChange(film, Object.assign({}, film, {
-            isFavorite: !film.isFavorite,
-          }));
+          const newFilm = FilmModel.clone(film);
+
+          newFilm.isFavorite = !newFilm.isFavorite;
+
+          this._onDataChange(film, newFilm);
 
           this._updateComments(this._comments);
         };

@@ -7,19 +7,18 @@ import PageController from "./controllers/page-controller";
 import FilterController from "./controllers/filter-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render} from "./utils/render";
-import {films} from "./mock/film-card";
 import API from "./api";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);
 const footerElement = document.querySelector(`.footer`);
 
-// const api = new API();
+const AUTHORIZATION = `Basic erdfgjbhknlms;efs`;
+const api = new API(AUTHORIZATION);
 
 const siteMenuElement = new MenuComponent();
 
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(films);
 
 render(siteHeaderElement, new UserRatingComponent(filmsModel.getFilms()), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
@@ -29,7 +28,6 @@ filterController.render();
 
 const filmsBlock = new FilmsBlockComponent();
 const pageController = new PageController(filmsBlock, filmsModel);
-pageController.render();
 
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
@@ -54,8 +52,8 @@ filterController.setFilterClickHandler(() => {
   pageController.show();
 });
 
-// api.getFilms()
-//   .then((films) => {
-//     filmsModel.setFilms(films);
-//     pageController.render();
-//   });
+api.getFilms()
+  .then((films) => {
+    filmsModel.setFilms(films);
+    pageController.render();
+  });

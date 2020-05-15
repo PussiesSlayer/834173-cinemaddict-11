@@ -49,8 +49,8 @@ siteMenuElement.setStatsClickHandler((evt) => {
   statisticComponent.show();
 });
 
-filterController.setFilterClickHandler(() => {
-  statisticComponent.hide();
-
-  pageController.show();
-});
+// filterController.setFilterClickHandler(() => {
+//   statisticComponent.hide();
+//
+//   pageController.show();
+// });

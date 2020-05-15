@@ -162,10 +162,6 @@ export default class FilmPopup extends AbstractSmartComponent {
     super.rerender();
   }
 
-  reset() {
-    this.rerender();
-  }
-
   setCloseButtonClickHandler(handler) {
     const closeButton = this.getElement().querySelector(`.film-details__close-btn`);
 

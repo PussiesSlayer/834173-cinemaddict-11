@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createFilterMarkup = (filter, isChecked) => {
   const {title, count} = filter;
@@ -27,7 +27,7 @@ const createFiltersTemplate = (filters) => {
   );
 };
 
-export default class Filters extends AbstractComponent {
+export default class Filters extends AbstractSmartComponent {
   constructor(filters) {
     super();
     this._filters = filters;
@@ -50,8 +50,16 @@ export default class Filters extends AbstractComponent {
     });
   }
 
-  setFilterClickHandler(handler) {
-    this.getElement().addEventListener(`click`, handler);
-    this._filterClickHandler = handler;
+  // setFilterClickHandler(handler) {
+  //   this.getElement().addEventListener(`click`, handler);
+  //   this._filterClickHandler = handler;
+  // }
+
+  rerender() {
+    super.rerender();
   }
+
+  // recoveryListeners() {
+  //   this.setFilterClickHandler(this._filterClickHandler);
+  // }
 }

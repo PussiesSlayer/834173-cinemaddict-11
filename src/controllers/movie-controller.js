@@ -3,7 +3,6 @@ import FilmPopupComponent from "../components/film-popup";
 import CommentsController from "../controllers/comments-controller";
 import CommentsModel from "../models/comments";
 import {appendChildComponent, removeChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
-import API from "../api";
 import FilmModel from "../models/movie";
 
 const PopupStatus = {

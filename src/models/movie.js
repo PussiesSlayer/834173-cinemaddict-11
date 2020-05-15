@@ -34,9 +34,3 @@ export default class Film {
     return data.map(Film.parseFilm);
   }
 }
-
-//     id: String(Date() + Math.random()),
-//     emoji: getRandomValue(Emogies),
-//     date: getRandomDate(),
-//     message: getRandomDescription(),
-//     userName: getRandomValue(UserNames),

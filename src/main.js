@@ -7,6 +7,7 @@ import LoadingComponent from "./components/loading";
 import PageController from "./controllers/page-controller";
 import FilterController from "./controllers/filter-controller";
 import FilmsModel from "./models/movies";
+import CommentsModel from "./models/comments";
 import {RenderPosition, render, remove} from "./utils/render";
 import API from "./api";
 
@@ -31,7 +32,7 @@ const filmsBlock = new FilmsBlockComponent();
 const loadingComponent = new LoadingComponent();
 render(filmsBlock.getElement(), loadingComponent, RenderPosition.AFTERBEGIN);
 
-const pageController = new PageController(filmsBlock, filmsModel);
+const pageController = new PageController(filmsBlock, filmsModel, api);
 
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
@@ -39,6 +40,8 @@ const footerStatisticElement = footerElement.querySelector(`.footer__statistics`
 
 // TODO: переписать статистику на контроллер
 const statisticComponent = new StatisticComponent(filmsModel.getFilmsAll());
+render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
+statisticComponent.hide();
 
 siteMenuElement.setStatsClickHandler((evt) => {
   evt.preventDefault();
@@ -53,9 +56,18 @@ filterController.setFilterClickHandler(() => {
   pageController.show();
 });
 
+const commentsModel = new CommentsModel();
+
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+
+    const allFilms = filmsModel.getFilmsAll();
+
+    return Promise.all(allFilms.map((film) => api.getComments(film.id)));
+  })
+  .then((comments) => {
+    // commentsModel.setComments(comments);
   })
   .finally(() => {
     remove(loadingComponent);
@@ -66,7 +78,4 @@ api.getFilms()
 
     render(siteHeaderElement, new UserRatingComponent(allFilms), RenderPosition.BEFOREEND);
     render(footerStatisticElement, new FooterStatisticComponent(allFilms), RenderPosition.BEFOREEND);
-
-    render(siteMainElement, new StatisticComponent(allFilms), RenderPosition.BEFOREEND);
-    statisticComponent.hide();
   });

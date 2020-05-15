@@ -3,6 +3,7 @@ import FilmPopupComponent from "../components/film-popup";
 import CommentsController from "../controllers/comments-controller";
 import CommentsModel from "../models/comments";
 import {appendChildComponent, removeChildComponent, remove, render, replace, RenderPosition} from "../utils/render";
+import API from "../api";
 
 const PopupStatus = {
   SHOW: `show`,
@@ -18,8 +19,10 @@ const renderComments = (commentsContainer, comments, onCommentsDataChange) => {
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
+
+    this._api = api;
 
     this._filmPopupComponent = null;
     this._filmComponent = null;
@@ -30,6 +33,8 @@ export default class MovieController {
 
     this._commentsModel = new CommentsModel();
 
+    this._comments = null;
+
     this._mode = PopupStatus.HIDE;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -39,65 +44,68 @@ export default class MovieController {
   }
 
   render(film) {
-    this._commentsModel.setComments(film.comments);
-    const comments = this._commentsModel.getComments();
+    this._api.getComments(film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+        this._comments = this._commentsModel.getComments();
 
-    const oldFlmComponent = this._filmComponent;
-    const oldFilmPopupComponent = this._filmPopupComponent;
+        const oldFlmComponent = this._filmComponent;
+        const oldFilmPopupComponent = this._filmPopupComponent;
 
-    this._filmPopupComponent = new FilmPopupComponent(film);
-    this._filmComponent = new FilmCardComponent(film, comments);
+        this._filmPopupComponent = new FilmPopupComponent(film);
+        this._filmComponent = new FilmCardComponent(film, this._commentsModel.getComments());
 
-    this._filmComponent.setOpenPopupClickHandler(() => {
-      this._showFilmPopup();
-      document.addEventListener(`keydown`, this._onEscKeyDown);
+        this._filmComponent.setOpenPopupClickHandler(() => {
+          this._showFilmPopup();
+          document.addEventListener(`keydown`, this._onEscKeyDown);
 
-      this._updateComments(comments);
-    });
+          this._updateComments(this._comments);
+        });
 
-    this._filmPopupComponent.setCloseButtonClickHandler(() => {
-      this._hideFilmPopup();
-      this._removeComments();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    });
+        this._filmPopupComponent.setCloseButtonClickHandler(() => {
+          this._hideFilmPopup();
+          this._removeComments();
+          document.removeEventListener(`keydown`, this._onEscKeyDown);
+        });
 
-    const changeWatchlistStatus = () => {
-      this._onDataChange(film, Object.assign({}, film, {
-        isWantToWatch: !film.isWantToWatch,
-      }));
+        const changeWatchlistStatus = () => {
+          this._onDataChange(film, Object.assign({}, film, {
+            isWantToWatch: !film.isWantToWatch,
+          }));
 
-      this._updateComments(comments);
-    };
+          this._updateComments(this._comments);
+        };
 
-    const changeWatchedStatus = () => {
-      this._onDataChange(film, Object.assign({}, film, {
-        isWatched: !film.isWatched,
-      }));
+        const changeWatchedStatus = () => {
+          this._onDataChange(film, Object.assign({}, film, {
+            isWatched: !film.isWatched,
+          }));
 
-      this._updateComments(comments);
-    };
+          this._updateComments(this._comments);
+        };
 
-    const changeFavoriteStatus = () => {
-      this._onDataChange(film, Object.assign({}, film, {
-        isFavorite: !film.isFavorite,
-      }));
+        const changeFavoriteStatus = () => {
+          this._onDataChange(film, Object.assign({}, film, {
+            isFavorite: !film.isFavorite,
+          }));
 
-      this._updateComments(comments);
-    };
+          this._updateComments(this._comments);
+        };
 
-    this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
-    this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
-    this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
-    this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
-    this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
-    this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
+        this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
+        this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
+        this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
+        this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
+        this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
+        this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
 
-    if (oldFlmComponent && oldFilmPopupComponent) {
-      replace(this._filmComponent, oldFlmComponent);
-      replace(this._filmPopupComponent, oldFilmPopupComponent);
-    } else {
-      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
-    }
+        if (oldFlmComponent && oldFilmPopupComponent) {
+          replace(this._filmComponent, oldFlmComponent);
+          replace(this._filmPopupComponent, oldFilmPopupComponent);
+        } else {
+          render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
+        }
+      });
   }
 
   destroy() {
@@ -117,8 +125,6 @@ export default class MovieController {
 
   _hideFilmPopup() {
     const footerElement = document.querySelector(`.footer`);
-
-    // this._filmPopupComponent.reset();
 
     if (document.contains(this._filmPopupComponent.getElement())) {
       removeChildComponent(footerElement, this._filmPopupComponent);

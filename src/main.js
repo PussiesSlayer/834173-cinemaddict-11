@@ -21,7 +21,7 @@ const siteMenuElement = new MenuComponent();
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
-render(siteHeaderElement, new UserRatingComponent(), RenderPosition.BEFOREEND);
+render(siteHeaderElement, new UserRatingComponent(filmsModel.getFilms()), RenderPosition.BEFOREEND);
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(siteMenuElement.getElement(), filmsModel);

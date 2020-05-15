@@ -284,6 +284,7 @@ export default class Statistic extends AbstractSmartComponent {
     if (this._charts) {
       this._charts.destroy();
       this._charts = null;
+      this._currentPeriod = PeriodFilterType.ALL_TIME;
     }
   }
 }

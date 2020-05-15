@@ -175,18 +175,21 @@ export default class PageController {
   }
 
   _onDataChange(oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
 
-    if (isSuccess) {
-      [...this._showedFilmControllers, ...this._topRatedFilmControllers, ...this._mostCommentedFilmsControllers]
-        .forEach((it) => {
-          const film = it._filmComponent._film;
+        if (isSuccess) {
+          [...this._showedFilmControllers, ...this._topRatedFilmControllers, ...this._mostCommentedFilmsControllers]
+            .forEach((it) => {
+              const film = it._filmComponent._film;
 
-          if (film === oldData) {
-            it.render(newData);
-          }
-        });
-    }
+              if (film === oldData) {
+                it.render(newData);
+              }
+            });
+        }
+      });
   }
 
   _onViewChange() {

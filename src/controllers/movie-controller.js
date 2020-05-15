@@ -10,6 +10,8 @@ const PopupStatus = {
   HIDE: `hide`,
 };
 
+// TODO: При смене статуса в попапе комментарии исчезают
+
 const renderComments = (commentsContainer, comments, onCommentsDataChange) => {
   const commentsController = new CommentsController(commentsContainer, onCommentsDataChange);
 
@@ -44,6 +46,9 @@ export default class MovieController {
   }
 
   render(film) {
+
+    // TODO: создать компонент ошибки. При неудачной загрузке комментариев выводить об этом ошибку
+
     this._api.getComments(film.id)
       .then((comments) => {
         this._commentsModel.setComments(comments);

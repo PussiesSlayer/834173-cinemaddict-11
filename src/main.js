@@ -38,7 +38,8 @@ render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
 
-// TODO: переписать статистику на контроллер
+// TODO: переписать статистику на контроллер, чтобы можно было не передавать фильмы здесь; контроллер статистики рендерить в апи при загрузке фильмов
+
 const statisticComponent = new StatisticComponent(filmsModel.getFilmsAll());
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
 statisticComponent.hide();
@@ -50,24 +51,17 @@ siteMenuElement.setStatsClickHandler((evt) => {
   statisticComponent.show();
 });
 
+// TODO: Обработчик клика по фильтру живет недолго. Возможное решение: переписать filterController на menuController, где будут обработчики и клика на фильтр и на статистику
+
 filterController.setFilterClickHandler(() => {
   statisticComponent.hide();
 
   pageController.show();
 });
 
-const commentsModel = new CommentsModel();
-
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
-
-    const allFilms = filmsModel.getFilmsAll();
-
-    return Promise.all(allFilms.map((film) => api.getComments(film.id)));
-  })
-  .then((comments) => {
-    // commentsModel.setComments(comments);
   })
   .finally(() => {
     remove(loadingComponent);

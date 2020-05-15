@@ -7,6 +7,8 @@ import moment from "moment";
 
 const BAR_HEIGHT = 50;
 
+const NOTHING = 0;
+
 const PeriodFilterType = {
   ALL_TIME: `all-time`,
   TODAY: `today`,
@@ -20,7 +22,7 @@ const getTotalDuration = (watchedFilms) => {
     return film.duration;
   });
 
-  return allDurations.reduce((acc, it) => acc + parseFloat(it));
+  return allDurations.length === 0 ? NOTHING : allDurations.reduce((acc, it) => acc + parseFloat(it));
 };
 
 const getGenresCounts = (watchedFilms) => {
@@ -129,7 +131,7 @@ const renderChart = (statisticCtx, watchedFilms) => {
   });
 };
 
-const createStatisticTemplate = ({watchedFilms, datePeriod, rank}) => {
+const createStatisticTemplate = (watchedFilms, datePeriod, rank) => {
   const watchedFilmsAmount = watchedFilms.length;
 
   const totalDuration = getTotalDuration(watchedFilms);
@@ -192,10 +194,10 @@ const createStatisticTemplate = ({watchedFilms, datePeriod, rank}) => {
 };
 
 export default class Statistic extends AbstractSmartComponent {
-  constructor({films}) {
+  constructor(films) {
     super();
 
-    this._allFilms = films.getFilms();
+    this._allFilms = films;
     this._watchedFilms = getWatchedFilms(this._allFilms);
     this._filteredFilms = this._watchedFilms;
 
@@ -213,7 +215,7 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createStatisticTemplate({watchedFilms: this._filteredFilms, datePeriod: this._currentPeriod, rank: this._rank});
+    return createStatisticTemplate(this._filteredFilms, this._currentPeriod, this._rank);
   }
 
   show() {
@@ -284,6 +286,7 @@ export default class Statistic extends AbstractSmartComponent {
     if (this._charts) {
       this._charts.destroy();
       this._charts = null;
+      this._currentPeriod = PeriodFilterType.ALL_TIME;
     }
   }
 }

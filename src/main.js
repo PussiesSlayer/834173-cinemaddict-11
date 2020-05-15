@@ -7,7 +7,6 @@ import LoadingComponent from "./components/loading";
 import PageController from "./controllers/page-controller";
 import FilterController from "./controllers/filter-controller";
 import FilmsModel from "./models/movies";
-import CommentsModel from "./models/comments";
 import {RenderPosition, render, remove} from "./utils/render";
 import API from "./api";
 
@@ -16,7 +15,9 @@ const siteHeaderElement = document.querySelector(`.header`);
 const footerElement = document.querySelector(`.footer`);
 
 const AUTHORIZATION = `Basic erdfgjbhknlms;efs`;
-const api = new API(AUTHORIZATION);
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+
+const api = new API(END_POINT, AUTHORIZATION);
 
 const siteMenuElement = new MenuComponent();
 

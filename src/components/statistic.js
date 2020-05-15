@@ -7,6 +7,8 @@ import moment from "moment";
 
 const BAR_HEIGHT = 50;
 
+const NOTHING = 0;
+
 const PeriodFilterType = {
   ALL_TIME: `all-time`,
   TODAY: `today`,
@@ -20,7 +22,7 @@ const getTotalDuration = (watchedFilms) => {
     return film.duration;
   });
 
-  return allDurations.reduce((acc, it) => acc + parseFloat(it));
+  return allDurations.length === 0 ? NOTHING : allDurations.reduce((acc, it) => acc + parseFloat(it));
 };
 
 const getGenresCounts = (watchedFilms) => {
@@ -195,7 +197,7 @@ export default class Statistic extends AbstractSmartComponent {
   constructor({films}) {
     super();
 
-    this._allFilms = films.getFilms();
+    this._allFilms = films;
     this._watchedFilms = getWatchedFilms(this._allFilms);
     this._filteredFilms = this._watchedFilms;
 

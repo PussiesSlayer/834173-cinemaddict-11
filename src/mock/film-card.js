@@ -137,6 +137,6 @@ const generateFilms = (count) => {
     .map(generateFilm);
 };
 
-const films = generateFilms(CARDS_COUNT);
+const films = generateFilms(0);
 
 export {films};

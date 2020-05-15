@@ -40,15 +40,14 @@ export default class FilterController {
     }
   }
 
-  // setFilterClickHandler(handler) {
-  //   this._filterComponent.setFilterClickHandler(handler);
-  // }
+  setFilterClickHandler(handler) {
+    this._filterComponent.setFilterClickHandler(handler);
+  }
 
   _onFilterChange(filterType) {
     this._filmsModel.setFilter(filterType);
     this._activeFilterType = filterType;
-
-    this._onDataChange();
+    this.render();
   }
 
   _onDataChange() {

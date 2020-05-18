@@ -82,11 +82,6 @@ export default class PageController {
   }
 
   _updateFilms(count) {
-    const newFilms = this._filmsModel.getFilms();
-
-    console.log(`pageControlle._updateFilms`);
-    console.log(newFilms);
-
     this._removeFilms();
     this._renderFilms(this._filmsModel.getFilms().slice(0, count));
     this._renderShowMoreButton();

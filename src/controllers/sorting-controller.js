@@ -12,10 +12,10 @@ export default class SortingController {
 
     this._onSortChange = this._onSortChange.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
-    // this._onFilterChange = this._onFilterChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
 
     this._filmsModel.setDataChangeHandlers(this._onDataChange);
-    // this._filmsModel.setFilterChangeHandler(this._onFilterChange);
+    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -53,11 +53,9 @@ export default class SortingController {
     this.render();
   }
 
-  // TODO: при смене фильтра нужно сбрасывать сортировку
-
-  // _onFilterChange() {
-  //   this._filmsModel.setSortType(SortType.DEFAULT);
-  //   this._currentSortType = SortType.DEFAULT;
-  //   this.render();
-  // }
+  _onFilterChange() {
+    this._filmsModel.setSortType(SortType.DEFAULT);
+    this._currentSortType = SortType.DEFAULT;
+    this.render();
+  }
 }

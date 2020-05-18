@@ -1,31 +1,48 @@
 import AbstractComponent from "./abstract-component";
 import {SortType} from "../consts";
 
-const createSortingTemplate = () => {
+const createSortingMarkup = (sortType) => {
+  const {type, checked} = sortType;
+
+  return (
+    `<li>
+      <a href="#"
+       data-sort-type="${type}"
+        class="sort__button
+         ${checked ? `sort__button--active` : ``}"
+         >
+        Sort by ${type}
+        </a>
+        </li>`
+  );
+};
+
+const createSortingTemplate = (sortingTypes) => {
+  const sortingDefaultMarkup = sortingTypes
+    .map((type) => createSortingMarkup(type, type.checked)).join(`\n`);
+
   return (
     `<ul class="sort">
-      <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" data-sort-type="${SortType.BY_DATE}" class="sort__button">Sort by date</a></li>
-      <li><a href="#" data-sort-type="${SortType.BY_RATING}" class="sort__button">Sort by rating</a></li>
-    </ul>
-   `
+      ${sortingDefaultMarkup}
+     </ul>`
   );
 };
 
 export default class Sorting extends AbstractComponent {
-  constructor() {
+  constructor(sortingTypes) {
     super();
 
-    this._currentSortType = SortType.DEFAULT;
+    // this._currentSortType = SortType.DEFAULT;
+    this._sortingTypes = sortingTypes;
   }
 
   getTemplate() {
-    return createSortingTemplate();
+    return createSortingTemplate(this._sortingTypes);
   }
 
-  getSortType() {
-    return this._currentSortType;
-  }
+  // getSortType() {
+  //   return this._currentSortType;
+  // }
 
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
@@ -37,13 +54,17 @@ export default class Sorting extends AbstractComponent {
 
       const sortType = evt.target.dataset.sortType;
 
-      if (sortType === this._currentSortType) {
-        return;
-      }
+      // if (sortType === this._currentSortType) {
+      //   return;
+      // }
+      //
+      // this._currentSortType = sortType;
 
-      this._currentSortType = sortType;
-
-      handler(this._currentSortType);
+      handler(sortType);
     });
   }
+
+  // resetSorting() {
+  //   this._currentSortType = SortType.DEFAULT;
+  // }
 }

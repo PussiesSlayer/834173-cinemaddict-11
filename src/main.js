@@ -6,6 +6,7 @@ import StatisticComponent from "./components/statistic";
 import LoadingComponent from "./components/loading";
 import PageController from "./controllers/page-controller";
 import FilterController from "./controllers/filter-controller";
+import SortingController from "./controllers/sorting-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render, remove} from "./utils/render";
 import API from "./api";
@@ -29,6 +30,9 @@ const filterController = new FilterController(siteMenuElement.getElement(), film
 filterController.render();
 
 const filmsBlock = new FilmsBlockComponent();
+
+const sortingController = new SortingController(siteMenuElement.getElement(), filmsModel);
+sortingController.render();
 
 const loadingComponent = new LoadingComponent();
 render(filmsBlock.getElement(), loadingComponent, RenderPosition.AFTERBEGIN);

@@ -1,18 +1,22 @@
 import {getFilmsByFilter} from "../utils/filter";
-import {FilterType} from "../consts";
+import {FilterType, SortType} from "../consts";
+import {getSortingFilms} from "../utils/sort";
 
 export default class Movies {
   constructor() {
     this._films = [];
 
     this._activeFilterType = FilterType.ALL;
+    this._currentSortType = SortType.DEFAULT;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+    this._sortingChangeHandlers = [];
   }
 
   getFilms() {
-    return getFilmsByFilter(this._films, this._activeFilterType);
+    const filteredFilms = getFilmsByFilter(this._films, this._activeFilterType);
+    return getSortingFilms(filteredFilms, this._currentSortType);
   }
 
   getFilmsAll() {
@@ -42,13 +46,22 @@ export default class Movies {
     this._dataChangeHandlers.push(handler);
   }
 
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
+  }
+
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
 
-  setFilter(filterType) {
-    this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
+  setSortType(sortType) {
+    this._currentSortType = sortType;
+    this._callHandlers(this._sortingChangeHandlers);
+  }
+
+  setSortTypeChangeHandler(handler) {
+    this._sortingChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

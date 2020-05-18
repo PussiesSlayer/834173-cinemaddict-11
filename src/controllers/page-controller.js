@@ -4,7 +4,7 @@ import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
 import MovieController from "./movie-controller";
 import {remove, render, RenderPosition} from "../utils/render";
-import {CARDS_COUNT_SPECIAL, CARDS_COUNT_DEFAULT, CARDS_COUNT_BY_BUTTON, NO_FILMS, SortType} from "../consts";
+import {CARDS_COUNT_SPECIAL, CARDS_COUNT_DEFAULT, CARDS_COUNT_BY_BUTTON, NO_FILMS} from "../consts";
 
 const renderFilms = (filmsListElement, films, onDataChange, onViewChange, api) => {
   return films.map((film) => {
@@ -15,25 +15,6 @@ const renderFilms = (filmsListElement, films, onDataChange, onViewChange, api) =
     return movieController;
   });
 };
-
-// const getSortedFilms = (films, sortType, from, to) => {
-//   let sortedFilms = [];
-//   const showingFilms = films.slice();
-//
-//   switch (sortType) {
-//     case SortType.DEFAULT:
-//       sortedFilms = showingFilms;
-//       break;
-//     case SortType.BY_RATING:
-//       sortedFilms = showingFilms.sort((a, b) => b.userRating - a.userRating);
-//       break;
-//     case SortType.BY_DATE:
-//       sortedFilms = showingFilms.sort((a, b) => b.date - a.date);
-//       break;
-//   }
-//
-//   return sortedFilms.slice(from, to);
-// };
 
 export default class PageController {
   constructor(container, filmsModel, api) {
@@ -54,6 +35,7 @@ export default class PageController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
 
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);

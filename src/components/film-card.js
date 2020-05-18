@@ -28,7 +28,7 @@ const createButtonMarkup = (name, isChecked) => {
   );
 };
 
-const createFilmCardTemplate = (film, comments) => {
+const createFilmCardTemplate = (film) => {
   const {name, poster, description, userRating, date, duration, genres} = film;
   const year = formatReleaseYear(date);
 
@@ -48,7 +48,7 @@ const createFilmCardTemplate = (film, comments) => {
           </p>
           <img src=${poster} alt="${name}" class="film-card__poster">
           <p class="film-card__description">${description}</p>
-          <a class="film-card__comments">${comments.length} comments</a>
+          <a class="film-card__comments">${film.comments.length} comments</a>
           <form class="film-card__controls">
             ${watchlistButton}
             ${watchedButton}
@@ -59,14 +59,13 @@ const createFilmCardTemplate = (film, comments) => {
 };
 
 export default class FilmCard extends AbstractComponent {
-  constructor(film, comments) {
+  constructor(film) {
     super();
     this._film = film;
-    this._comments = comments;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film, this._comments);
+    return createFilmCardTemplate(this._film);
   }
 
   setOpenPopupClickHandler(handler) {

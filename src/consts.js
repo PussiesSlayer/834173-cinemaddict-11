@@ -9,8 +9,8 @@ export const EMOGIES = [`angry`, `puke`, `sleeping`, `smile`];
 
 export const SortType = {
   DEFAULT: `default`,
-  BY_RATING: `date`,
-  BY_DATE: `rating`,
+  RATING: `rating`,
+  DATE: `date`,
 };
 
 export const MONTH_NAMES = [

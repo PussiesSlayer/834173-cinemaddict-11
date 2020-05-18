@@ -47,77 +47,146 @@ export default class MovieController {
 
   render(film) {
 
-    // TODO: создать компонент ошибки. При неудачной загрузке комментариев выводить об этом ошибку
-    // TODO: Комментарии. Переделать парсеФромДате;
 
-    this._api.getComments(film.id)
-      .then((comments) => {
-        this._commentsModel.setComments(comments);
-        this._comments = this._commentsModel.getComments();
 
-        const oldFlmComponent = this._filmComponent;
-        const oldFilmPopupComponent = this._filmPopupComponent;
+    const oldFlmComponent = this._filmComponent;
+    const oldFilmPopupComponent = this._filmPopupComponent;
 
-        this._filmPopupComponent = new FilmPopupComponent(film);
-        this._filmComponent = new FilmCardComponent(film, this._commentsModel.getComments());
+    this._filmPopupComponent = new FilmPopupComponent(film);
+    this._filmComponent = new FilmCardComponent(film);
 
-        this._filmComponent.setOpenPopupClickHandler(() => {
+    this._filmComponent.setOpenPopupClickHandler(() => {
+
+
+      this._api.getComments(film.id)
+        .then((comments) => {
+
           this._showFilmPopup();
           document.addEventListener(`keydown`, this._onEscKeyDown);
 
-          this._updateComments(this._comments);
+          this._updateComments(comments);
+
         });
+    });
 
-        this._filmPopupComponent.setCloseButtonClickHandler(() => {
-          this._hideFilmPopup();
-          this._removeComments();
-          document.removeEventListener(`keydown`, this._onEscKeyDown);
-        });
+    this._filmPopupComponent.setCloseButtonClickHandler(() => {
+      this._hideFilmPopup();
+      this._removeComments();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    });
 
-        const changeWatchlistStatus = () => {
-          const newFilm = FilmModel.clone(film);
+    const changeWatchlistStatus = () => {
+      const newFilm = FilmModel.clone(film);
 
-          newFilm.isWantToWatch = !newFilm.isWantToWatch;
+      newFilm.isWantToWatch = !newFilm.isWantToWatch;
 
-          this._onDataChange(film, newFilm);
+      this._onDataChange(film, newFilm);
 
-          this._updateComments(this._comments);
-        };
+      this._updateComments(this._comments);
+    };
 
-        const changeWatchedStatus = () => {
-          const newFilm = FilmModel.clone(film);
+    const changeWatchedStatus = () => {
+      const newFilm = FilmModel.clone(film);
 
-          newFilm.isWatched = !newFilm.isWatched;
+      newFilm.isWatched = !newFilm.isWatched;
 
-          this._onDataChange(film, newFilm);
+      this._onDataChange(film, newFilm);
 
-          this._updateComments(this._comments);
-        };
+      this._updateComments(this._comments);
+    };
 
-        const changeFavoriteStatus = () => {
-          const newFilm = FilmModel.clone(film);
+    const changeFavoriteStatus = () => {
+      const newFilm = FilmModel.clone(film);
 
-          newFilm.isFavorite = !newFilm.isFavorite;
+      newFilm.isFavorite = !newFilm.isFavorite;
 
-          this._onDataChange(film, newFilm);
+      this._onDataChange(film, newFilm);
 
-          this._updateComments(this._comments);
-        };
+      this._updateComments(this._comments);
+    };
 
-        this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
-        this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
-        this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
-        this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
-        this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
-        this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
+    this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
+    this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
+    this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
+    this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
+    this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
+    this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
 
-        if (oldFlmComponent && oldFilmPopupComponent) {
-          replace(this._filmComponent, oldFlmComponent);
-          replace(this._filmPopupComponent, oldFilmPopupComponent);
-        } else {
-          render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
-        }
-      });
+    if (oldFlmComponent && oldFilmPopupComponent) {
+      replace(this._filmComponent, oldFlmComponent);
+      replace(this._filmPopupComponent, oldFilmPopupComponent);
+    } else {
+      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
+    }
+
+    // this._api.getComments(film.id)
+    //   .then((comments) => {
+    //     this._commentsModel.setComments(comments);
+    //     this._comments = this._commentsModel.getComments();
+    //
+    //     const oldFlmComponent = this._filmComponent;
+    //     const oldFilmPopupComponent = this._filmPopupComponent;
+    //
+    //     this._filmPopupComponent = new FilmPopupComponent(film);
+    //     this._filmComponent = new FilmCardComponent(film, this._commentsModel.getComments());
+    //
+    //     this._filmComponent.setOpenPopupClickHandler(() => {
+    //       this._showFilmPopup();
+    //       document.addEventListener(`keydown`, this._onEscKeyDown);
+    //
+    //       this._updateComments(this._comments);
+    //     });
+    //
+    //     this._filmPopupComponent.setCloseButtonClickHandler(() => {
+    //       this._hideFilmPopup();
+    //       this._removeComments();
+    //       document.removeEventListener(`keydown`, this._onEscKeyDown);
+    //     });
+    //
+    //     const changeWatchlistStatus = () => {
+    //       const newFilm = FilmModel.clone(film);
+    //
+    //       newFilm.isWantToWatch = !newFilm.isWantToWatch;
+    //
+    //       this._onDataChange(film, newFilm);
+    //
+    //       this._updateComments(this._comments);
+    //     };
+    //
+    //     const changeWatchedStatus = () => {
+    //       const newFilm = FilmModel.clone(film);
+    //
+    //       newFilm.isWatched = !newFilm.isWatched;
+    //
+    //       this._onDataChange(film, newFilm);
+    //
+    //       this._updateComments(this._comments);
+    //     };
+    //
+    //     const changeFavoriteStatus = () => {
+    //       const newFilm = FilmModel.clone(film);
+    //
+    //       newFilm.isFavorite = !newFilm.isFavorite;
+    //
+    //       this._onDataChange(film, newFilm);
+    //
+    //       this._updateComments(this._comments);
+    //     };
+    //
+    //     this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
+    //     this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
+    //     this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
+    //     this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
+    //     this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
+    //     this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
+    //
+    //     if (oldFlmComponent && oldFilmPopupComponent) {
+    //       replace(this._filmComponent, oldFlmComponent);
+    //       replace(this._filmPopupComponent, oldFilmPopupComponent);
+    //     } else {
+    //       render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
+    //     }
+    //   });
   }
 
   destroy() {

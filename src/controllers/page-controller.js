@@ -19,8 +19,8 @@ const renderFilms = (filmsListElement, films, onDataChange, onViewChange, api) =
 export default class PageController {
   constructor(container, filmsModel, api) {
     this._container = container;
-
     this._filmsModel = filmsModel;
+
     this._api = api;
 
     this._showedFilmControllers = [];
@@ -39,7 +39,7 @@ export default class PageController {
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
 
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
-    this._filmsModel.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._filmsModel.setSortChangeHandler(this._onSortTypeChange);
   }
 
   render() {
@@ -70,6 +70,7 @@ export default class PageController {
     const filmsListElement = container.querySelector(`.films-list__container`);
 
     const newFilms = renderFilms(filmsListElement, films, this._onDataChange, this._onViewChange, this._api);
+
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
 
     this._showingFilmsCount = this._showedFilmControllers.length;
@@ -81,6 +82,11 @@ export default class PageController {
   }
 
   _updateFilms(count) {
+    const newFilms = this._filmsModel.getFilms();
+
+    console.log(`pageControlle._updateFilms`);
+    console.log(newFilms);
+
     this._removeFilms();
     this._renderFilms(this._filmsModel.getFilms().slice(0, count));
     this._renderShowMoreButton();
@@ -140,6 +146,10 @@ export default class PageController {
     this._mostCommentedFilmsControllers = this._mostCommentedFilmsControllers.concat(newMostCommentedFilms);
   }
 
+  _onFilterChange() {
+    this._updateFilms(CARDS_COUNT_DEFAULT);
+  }
+
   _onSortTypeChange() {
     this._updateFilms(CARDS_COUNT_DEFAULT);
   }
@@ -165,9 +175,5 @@ export default class PageController {
   _onViewChange() {
     [...this._showedFilmControllers, ...this._topRatedFilmControllers, ...this._mostCommentedFilmsControllers]
       .forEach((it) => it.setDefaultView());
-  }
-
-  _onFilterChange() {
-    this._updateFilms(CARDS_COUNT_DEFAULT);
   }
 }

@@ -1,6 +1,6 @@
 import {SortType} from "../consts";
 
-export const getSortingFilms = (films, sortType) => {
+export const getSortedFilms = (films, sortType) => {
   let sortedFilms = [];
   const showingFilms = films.slice();
 
@@ -8,11 +8,11 @@ export const getSortingFilms = (films, sortType) => {
     case SortType.DEFAULT:
       sortedFilms = showingFilms;
       break;
-    case SortType.BY_RATING:
-      sortedFilms = showingFilms.sort((a, b) => b.userRating - a.userRating);
-      break;
-    case SortType.BY_DATE:
+    case SortType.DATE:
       sortedFilms = showingFilms.sort((a, b) => b.date - a.date);
+      break;
+    case SortType.RATING:
+      sortedFilms = showingFilms.sort((a, b) => b.userRating - a.userRating);
       break;
   }
 

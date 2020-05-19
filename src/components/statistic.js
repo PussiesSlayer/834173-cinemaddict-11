@@ -193,21 +193,29 @@ const createStatisticTemplate = (watchedFilms, datePeriod, rank) => {
   );
 };
 
+const getFilmForStatisticFromModel = (filmsModel) => {
+  const allFilms = filmsModel.getFilmsAll();
+
+  return getWatchedFilms(allFilms);
+};
+
 export default class Statistic extends AbstractSmartComponent {
-  constructor(films) {
+  constructor(filmsModel) {
     super();
 
-    this._allFilms = films;
+    this._filmsModel = filmsModel;
+
+    this._allFilms = this._filmsModel.getFilmsAll();
     this._watchedFilms = getWatchedFilms(this._allFilms);
     this._filteredFilms = this._watchedFilms;
 
-    this._rank = getUserRank(this._watchedFilms.length);
+    this._rank = null;
 
     this._currentPeriod = PeriodFilterType.ALL_TIME;
 
     this._charts = null;
 
-    this._renderCharts(this._filteredFilms);
+    this._renderCharts(getFilmForStatisticFromModel(this._filmsModel));
 
     this.datePeriodChangeHandler = null;
     this._onDatePeriodChangeHandler = this._onDatePeriodChangeHandler.bind(this);
@@ -215,7 +223,8 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createStatisticTemplate(this._filteredFilms, this._currentPeriod, this._rank);
+    const films = getFilmForStatisticFromModel(this._filmsModel);
+    return createStatisticTemplate(films, this._currentPeriod, this._rank);
   }
 
   setRank(films) {
@@ -242,7 +251,7 @@ export default class Statistic extends AbstractSmartComponent {
   rerender() {
     super.rerender();
 
-    this._renderCharts(this._filteredFilms);
+    this._renderCharts();
   }
 
   setDatePeriodChangeHandler(handler) {
@@ -283,14 +292,14 @@ export default class Statistic extends AbstractSmartComponent {
     this.rerender();
   }
 
-  _renderCharts(films) {
+  _renderCharts() {
     const element = this.getElement();
 
     const statisticCtx = element.querySelector(`.statistic__chart`);
 
     this._resetCharts();
 
-    this._charts = renderChart(statisticCtx, films);
+    this._charts = renderChart(statisticCtx, getFilmForStatisticFromModel(this._filmsModel));
   }
 
   _resetCharts() {

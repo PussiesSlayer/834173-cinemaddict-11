@@ -22,10 +22,9 @@ const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const api = new API(END_POINT, AUTHORIZATION);
 
 const siteMenuElement = new MenuComponent();
+render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
 const filmsModel = new FilmsModel();
-
-render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
 const userRatingComponent = new UserRatingComponent();
 render(siteHeaderElement, userRatingComponent, RenderPosition.BEFOREEND);
@@ -33,10 +32,10 @@ render(siteHeaderElement, userRatingComponent, RenderPosition.BEFOREEND);
 const filterController = new FilterController(siteMenuElement.getElement(), filmsModel);
 filterController.render();
 
-const filmsBlock = new FilmsBlockComponent();
-
 const sortingController = new SortingController(siteMenuElement.getElement(), filmsModel);
 sortingController.render();
+
+const filmsBlock = new FilmsBlockComponent();
 
 const loadingComponent = new LoadingComponent();
 render(filmsBlock.getElement(), loadingComponent, RenderPosition.AFTERBEGIN);
@@ -49,7 +48,7 @@ const footerStatisticElement = footerElement.querySelector(`.footer__statistics`
 const footerStatisticComponent = new FooterStatisticComponent();
 render(footerStatisticElement, footerStatisticComponent, RenderPosition.BEFOREEND);
 
-const statisticComponent = new StatisticComponent(filmsModel.getFilmsAll());
+const statisticComponent = new StatisticComponent(filmsModel);
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
 statisticComponent.hide();
 
@@ -80,6 +79,9 @@ filmsModel.setDataChangeHandlers(() => {
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
+  })
+  .catch(() => {
+    filmsModel.setFilms([]);
   })
   .finally(() => {
     remove(loadingComponent);

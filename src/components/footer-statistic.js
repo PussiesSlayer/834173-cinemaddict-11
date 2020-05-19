@@ -1,21 +1,26 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
-const createFooterStatisticTemplate = (films) => {
-  const filmsAmount = films.length;
-
+const createFooterStatisticTemplate = (count) => {
   return (
-    `<p>${filmsAmount} movies inside</p>`
+    `<p>${count} movies inside</p>`
   );
 };
 
-export default class FooterStatistic extends AbstractComponent {
-  constructor(films) {
+export default class FooterStatistic extends AbstractSmartComponent {
+  constructor() {
     super();
 
-    this._films = films;
+    this._count = 0;
   }
 
   getTemplate() {
-    return createFooterStatisticTemplate(this._films);
+    return createFooterStatisticTemplate(this._count);
   }
+
+  setCount(films) {
+    this._count = films.length;
+    this.rerender();
+  }
+
+  recoveryListeners() {}
 }

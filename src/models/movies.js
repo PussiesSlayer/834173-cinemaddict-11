@@ -12,6 +12,7 @@ export default class Movies {
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
     this._sortingChangeHandlers = [];
+    this._dataLoadHandlers = [];
   }
 
   getFilms() {
@@ -26,6 +27,7 @@ export default class Movies {
 
   setFilms(films) {
     this._films = films;
+    this._callHandlers(this._dataLoadHandlers);
     this._callHandlers(this._dataChangeHandlers);
   }
 
@@ -63,6 +65,10 @@ export default class Movies {
 
   setSortChangeHandler(handler) {
     this._sortingChangeHandlers.push(handler);
+  }
+
+  setDataLoadHandler(handler) {
+    this._dataLoadHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

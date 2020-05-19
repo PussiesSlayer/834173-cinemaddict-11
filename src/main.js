@@ -27,6 +27,9 @@ const filmsModel = new FilmsModel();
 
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
+const userRatingComponent = new UserRatingComponent();
+render(siteHeaderElement, userRatingComponent, RenderPosition.BEFOREEND);
+
 const filterController = new FilterController(siteMenuElement.getElement(), filmsModel);
 filterController.render();
 
@@ -43,8 +46,8 @@ const pageController = new PageController(filmsBlock, filmsModel, api);
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
-
-// TODO: переписать статистику на контроллер, чтобы можно было не передавать фильмы здесь; контроллер статистики рендерить в апи при загрузке фильмов
+const footerStatisticComponent = new FooterStatisticComponent();
+render(footerStatisticElement, footerStatisticComponent, RenderPosition.BEFOREEND);
 
 const statisticComponent = new StatisticComponent(filmsModel.getFilmsAll());
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
@@ -65,18 +68,15 @@ siteMenuElement.setMenuClickHandler((menuItem) => {
   }
 });
 
+filmsModel.setDataLoadHandler(() => {
+  footerStatisticComponent.setCount(filmsModel.getFilmsAll());
+});
+
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
   })
   .finally(() => {
     remove(loadingComponent);
-
-    const allFilms = filmsModel.getFilmsAll();
-
-    render(siteHeaderElement, new UserRatingComponent(allFilms), RenderPosition.BEFOREEND);
-
     pageController.render();
-
-    render(footerStatisticElement, new FooterStatisticComponent(allFilms), RenderPosition.BEFOREEND);
   });

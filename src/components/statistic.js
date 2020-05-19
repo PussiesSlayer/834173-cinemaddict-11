@@ -204,27 +204,20 @@ export default class Statistic extends AbstractSmartComponent {
     super();
 
     this._filmsModel = filmsModel;
-
-    this._allFilms = this._filmsModel.getFilmsAll();
-    this._watchedFilms = getWatchedFilms(this._allFilms);
-    this._filteredFilms = this._watchedFilms;
-
-    this._rank = null;
+    this._filteredFilms = [];
 
     this._currentPeriod = PeriodFilterType.ALL_TIME;
 
+    this._rank = null;
     this._charts = null;
 
     this._renderCharts(getFilmForStatisticFromModel(this._filmsModel));
 
-    this.datePeriodChangeHandler = null;
-    this._onDatePeriodChangeHandler = this._onDatePeriodChangeHandler.bind(this);
-    this.setDatePeriodChangeHandler(this._onDatePeriodChangeHandler);
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    const films = getFilmForStatisticFromModel(this._filmsModel);
-    return createStatisticTemplate(films, this._currentPeriod, this._rank);
+    return createStatisticTemplate(this._filteredFilms, this._currentPeriod, this._rank);
   }
 
   setRank(films) {
@@ -245,28 +238,30 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setDatePeriodChangeHandler(this.datePeriodChangeHandler);
+    this._subscribeOnEvents();
   }
 
   rerender() {
+    const dateFrom = this._getDateFrom(this._currentPeriod);
+    const films = getFilmForStatisticFromModel(this._filmsModel);
+
+    this._filteredFilms = getWatchedFilmsByPeriod(films, dateFrom);
+
     super.rerender();
 
     this._renderCharts();
   }
 
-  setDatePeriodChangeHandler(handler) {
-    const periodInputs = this.getElement().querySelectorAll(`.statistic__filters-input`);
-
-    periodInputs.forEach((input) => {
-      input.addEventListener(`change`, (evt) => {
-        handler(evt.target.value);
+  _subscribeOnEvents() {
+    this.getElement().querySelector(`.statistic__filters`)
+      .addEventListener(`change`, (evt) => {
+        this._currentPeriod = evt.target.value;
+        this.rerender();
       });
-    });
 
-    this.datePeriodChangeHandler = handler;
   }
 
-  _onDatePeriodChangeHandler(period) {
+  _getDateFrom(period) {
     this._currentPeriod = period;
     let dateFrom = null;
 
@@ -288,18 +283,16 @@ export default class Statistic extends AbstractSmartComponent {
         break;
     }
 
-    this._filteredFilms = getWatchedFilmsByPeriod(this._watchedFilms, dateFrom);
-    this.rerender();
+    return dateFrom;
   }
 
   _renderCharts() {
     const element = this.getElement();
-
     const statisticCtx = element.querySelector(`.statistic__chart`);
 
     this._resetCharts();
 
-    this._charts = renderChart(statisticCtx, getFilmForStatisticFromModel(this._filmsModel));
+    this._charts = renderChart(statisticCtx, this._filteredFilms);
   }
 
   _resetCharts() {

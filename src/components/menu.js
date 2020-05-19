@@ -21,11 +21,11 @@ export default class Menu extends AbstractComponent {
       .addEventListener(`click`, (evt) => {
         evt.preventDefault();
 
-        if (evt.target.tagName !== `A`) {
+        if (evt.target.tagName !== `A` && evt.target.parentElement.tagName !== `A`) {
           return;
         }
 
-        const menuItem = evt.target.dataset.filterType ? MenuItem.FILTER : MenuItem.STATS;
+        const menuItem = evt.target.dataset.filterType || evt.target.parentElement.dataset.filterType ? MenuItem.FILTER : MenuItem.STATS;
 
         if (menuItem === MenuItem.STATS) {
           this._setStatsActiveStatus();

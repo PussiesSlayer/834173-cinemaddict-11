@@ -22,7 +22,7 @@ const createButtonMarkup = (name, isChecked) => {
   };
 
   return (
-    `<button class="film-card__controls-item button film-card__controls-item--${setNameForClass()} ${isChecked ? `film-card__controls-item--active` : ``}">
+    `<button type="button" class="film-card__controls-item button film-card__controls-item--${setNameForClass()} ${isChecked ? `film-card__controls-item--active` : ``}">
       ${name === TypesButton.WATCHLIST ? `Add to ${name}` : `Mark as ${name}`}
      </button>`
   );

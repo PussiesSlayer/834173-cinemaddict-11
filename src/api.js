@@ -24,7 +24,6 @@ const API = class {
 
   getFilms() {
     return this._load({url: `movies`})
-      .then(checkStatus)
       .then((response) => response.json())
       .then(Film.parseFilms);
   }
@@ -36,17 +35,12 @@ const API = class {
   }
 
   updateFilm(id, data) {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-    headers.append(`Content-Type`, `application/json`);
-
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRaw()),
       headers: new Headers({"Content-Type": `application/json`}),
     })
-      .then(checkStatus)
       .then((response) => response.json())
       .then(Film.parseFilm);
   }

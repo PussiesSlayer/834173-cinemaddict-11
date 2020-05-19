@@ -74,8 +74,9 @@ api.getFilms()
 
     const allFilms = filmsModel.getFilmsAll();
 
+    render(siteHeaderElement, new UserRatingComponent(allFilms), RenderPosition.BEFOREEND);
+
     pageController.render();
 
-    render(siteHeaderElement, new UserRatingComponent(allFilms), RenderPosition.BEFOREEND);
     render(footerStatisticElement, new FooterStatisticComponent(allFilms), RenderPosition.BEFOREEND);
   });

@@ -35,8 +35,6 @@ export default class MovieController {
 
     this._commentsModel = new CommentsModel();
 
-    this._comments = null;
-
     this._mode = PopupStatus.HIDE;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);

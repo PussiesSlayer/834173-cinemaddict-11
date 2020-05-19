@@ -10,6 +10,7 @@ import SortingController from "./controllers/sorting-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render, remove} from "./utils/render";
 import API from "./api";
+import {MenuItem} from "./consts";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);
@@ -49,21 +50,19 @@ const statisticComponent = new StatisticComponent(filmsModel.getFilmsAll());
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
 statisticComponent.hide();
 
-siteMenuElement.setStatsClickHandler((evt) => {
-  evt.preventDefault();
-
-  sortingController.hide();
-  pageController.hide();
-  statisticComponent.show();
-});
-
-// TODO: Обработчик клика по фильтру живет недолго. Возможное решение: переписать filterController на menuController, где будут обработчики и клика на фильтр и на статистику
-
-filterController.setFilterClickHandler(() => {
-  statisticComponent.hide();
-
-  sortingController.show();
-  pageController.show();
+siteMenuElement.setMenuClickHandler((menuItem) => {
+  switch (menuItem) {
+    case MenuItem.FILTER:
+      statisticComponent.hide();
+      sortingController.show();
+      pageController.show();
+      break;
+    case MenuItem.STATS:
+      sortingController.hide();
+      pageController.hide();
+      statisticComponent.show();
+      break;
+  }
 });
 
 api.getFilms()

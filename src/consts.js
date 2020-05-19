@@ -46,3 +46,8 @@ export const UserRank = {
   FAN: `Fan`,
   MOVIE_BUFF: `Movie Buff`,
 };
+
+export const MenuItem = {
+  FILTER: `filters`,
+  STATS: `stats`,
+};

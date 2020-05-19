@@ -224,6 +224,10 @@ export default class Statistic extends AbstractSmartComponent {
     this.rerender();
   }
 
+  hide() {
+    super.hide();
+  }
+
   recoveryListeners() {
     this.setDatePeriodChangeHandler(this.datePeriodChangeHandler);
   }

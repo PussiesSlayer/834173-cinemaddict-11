@@ -39,6 +39,14 @@ export default class SortingController {
     }
   }
 
+  show() {
+    this._sortingComponent.show();
+  }
+
+  hide() {
+    this._sortingComponent.hide();
+  }
+
   _onSortChange(sortType) {
     if (this._currentSortType === sortType) {
       return;

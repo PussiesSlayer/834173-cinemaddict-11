@@ -52,6 +52,7 @@ statisticComponent.hide();
 siteMenuElement.setStatsClickHandler((evt) => {
   evt.preventDefault();
 
+  sortingController.hide();
   pageController.hide();
   statisticComponent.show();
 });
@@ -61,6 +62,7 @@ siteMenuElement.setStatsClickHandler((evt) => {
 filterController.setFilterClickHandler(() => {
   statisticComponent.hide();
 
+  sortingController.show();
   pageController.show();
 });
 

@@ -40,9 +40,9 @@ export default class FilterController {
     }
   }
 
-  setFilterClickHandler(handler) {
-    this._filterComponent.setFilterClickHandler(handler);
-  }
+  // setFilterClickHandler(handler) {
+  //   this._filterComponent.setFilterClickHandler(handler);
+  // }
 
   _onFilterChange(filterType) {
     if (this._activeFilterType === filterType) {

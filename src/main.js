@@ -72,6 +72,10 @@ filmsModel.setDataLoadHandler(() => {
   footerStatisticComponent.setCount(filmsModel.getFilmsAll());
 });
 
+filmsModel.setDataChangeHandlers(() => {
+  userRatingComponent.setRank(filmsModel.getFilmsAll());
+});
+
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);

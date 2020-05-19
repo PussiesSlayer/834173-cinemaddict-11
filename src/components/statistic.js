@@ -218,6 +218,13 @@ export default class Statistic extends AbstractSmartComponent {
     return createStatisticTemplate(this._filteredFilms, this._currentPeriod, this._rank);
   }
 
+  setRank(films) {
+    const watchedFilms = getWatchedFilms(films);
+    const watchedFilmsAmount = watchedFilms.length;
+
+    this._rank = getUserRank(watchedFilmsAmount);
+  }
+
   show() {
     super.show();
 

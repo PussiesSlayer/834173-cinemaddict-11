@@ -74,6 +74,7 @@ filmsModel.setDataLoadHandler(() => {
 
 filmsModel.setDataChangeHandlers(() => {
   userRatingComponent.setRank(filmsModel.getFilmsAll());
+  statisticComponent.setRank(filmsModel.getFilmsAll());
 });
 
 api.getFilms()

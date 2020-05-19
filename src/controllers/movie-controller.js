@@ -72,7 +72,7 @@ export default class MovieController {
 
       this._onDataChange(film, newFilm);
 
-      this._updateComments(this._comments);
+      this._updateComments(film.id);
     };
 
     const changeWatchedStatus = () => {
@@ -82,7 +82,7 @@ export default class MovieController {
 
       this._onDataChange(film, newFilm);
 
-      this._updateComments(this._comments);
+      this._updateComments(film.id);
     };
 
     const changeFavoriteStatus = () => {
@@ -92,7 +92,7 @@ export default class MovieController {
 
       this._onDataChange(film, newFilm);
 
-      this._updateComments(this._comments);
+      this._updateComments(film.id);
     };
 
     this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);

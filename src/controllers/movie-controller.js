@@ -19,7 +19,7 @@ const renderComments = (commentsContainer, comments, onCommentsDataChange, film)
 };
 
 export default class MovieController {
-  constructor(container, filmsModel, onDataChange, onViewChange, api) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
 
     this._api = api;
@@ -32,7 +32,6 @@ export default class MovieController {
 
     this._commentsController = null;
 
-    this._filmsModel = filmsModel;
     this._commentsModel = new CommentsModel();
 
     this._mode = PopupStatus.HIDE;
@@ -170,12 +169,26 @@ export default class MovieController {
     }
   }
 
+  _updateCommentsAmountAfterDelete(film, id) {
+    film.removeComment(id);
+
+    this._filmComponent.updateCommentsAmount(film.comments.length);
+  }
+
+  _updateCommentsAmountAfterAdd(film, id) {
+    film.addComment(id);
+
+    this._filmComponent.updateCommentsAmount(film.comments.length);
+  }
+
   _onCommentsDataChange(film, oldData, newData) {
     if (oldData === null) {
       this._api.createComment(newData, film.id)
         .then(() => {
           this._commentsModel.addComment(newData);
           this._updateComments(film);
+
+          this._updateCommentsAmountAfterAdd(film, newData.id);
         });
     } else
     if (newData === null) {
@@ -184,10 +197,7 @@ export default class MovieController {
           this._commentsModel.removeComment(oldData.id);
           this._updateComments(film);
 
-          const changedFilm = FilmModel.clone(film);
-          changedFilm.removeComment(oldData.id);
-
-          // this._filmsModel.updateFilm(film.id, changedFilm);
+          this._updateCommentsAmountAfterDelete(film, oldData.id);
         });
     }
   }

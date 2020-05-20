@@ -71,4 +71,8 @@ export default class Film {
   removeComment(id) {
     this.comments = this.comments.filter((it) => it !== id);
   }
+
+  addComment(id) {
+    this.comments = [].concat(id, this.comments);
+  }
 }

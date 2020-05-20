@@ -1,7 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateOfComment} from "../utils/common";
 import {EMOGIES} from "../consts";
-import {encode} from "he";
 
 const createCommentsMarkup = (comments) => {
   return comments

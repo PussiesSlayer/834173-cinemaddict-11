@@ -6,7 +6,7 @@ import {encode} from "he";
 const parseFormData = (formData) => {
   return new CommentModel({
     "id": null,
-    "author": `Anonymous`,
+    "author": null,
     "comment": encode(formData.get(`comment`)),
     "date": new Date().toISOString(),
     "emotion": formData.get(`comment-emoji`)

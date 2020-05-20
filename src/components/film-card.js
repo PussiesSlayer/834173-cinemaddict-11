@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 import {TypesButton} from "../consts";
 import {normalizeDuration, formatReleaseYear} from "../utils/common";
 
@@ -28,7 +28,7 @@ const createButtonMarkup = (name, isChecked) => {
   );
 };
 
-const createFilmCardTemplate = (film) => {
+const createFilmCardTemplate = (film, commentsAmount) => {
   const {name, poster, description, userRating, date, duration, genres} = film;
   const year = formatReleaseYear(date);
 
@@ -48,7 +48,7 @@ const createFilmCardTemplate = (film) => {
           </p>
           <img src=${poster} alt="${name}" class="film-card__poster">
           <p class="film-card__description">${description}</p>
-          <a class="film-card__comments">${film.comments.length} comments</a>
+          <a class="film-card__comments">${commentsAmount} comments</a>
           <form class="film-card__controls">
             ${watchlistButton}
             ${watchedButton}
@@ -58,14 +58,20 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export default class FilmCard extends AbstractComponent {
+export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._commentsAmount = film.comments.length;
+
+    this.openPopupClickHandler = null;
+    this.watchlistButtonCLickHandler = null;
+    this.watchedButtonClickHandler = null;
+    this.favoriteButtonClickHandler = null;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film);
+    return createFilmCardTemplate(this._film, this._commentsAmount);
   }
 
   setOpenPopupClickHandler(handler) {
@@ -78,20 +84,40 @@ export default class FilmCard extends AbstractComponent {
     filmClickedElements.forEach((filmClickElement) => {
       filmClickElement.addEventListener(`click`, handler);
     });
+
+    this.openPopupClickHandler = handler;
   }
 
   setAddWatchlistButtonCLickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
       .addEventListener(`click`, handler);
+
+    this.watchlistButtonCLickHandler = handler;
   }
 
   setWatchedButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
       .addEventListener(`click`, handler);
+
+    this.watchedButtonClickHandler = handler;
   }
 
   setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, handler);
+
+    this.favoriteButtonClickHandler = handler;
+  }
+
+  updateCommentsAmount(newCommentsAmount) {
+    this._commentsAmount = newCommentsAmount;
+    this.rerender();
+  }
+
+  recoveryListeners() {
+    this.setOpenPopupClickHandler(this.openPopupClickHandler);
+    this.setAddWatchlistButtonCLickHandler(this.watchlistButtonCLickHandler);
+    this.setWatchedButtonClickHandler(this.watchedButtonClickHandler);
+    this.setFavoriteButtonClickHandler(this.favoriteButtonClickHandler);
   }
 }

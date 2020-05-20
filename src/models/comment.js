@@ -7,6 +7,16 @@ export default class Comment {
     this.userName = data[`author`];
   }
 
+  toRaw() {
+    return {
+      "id": this.id,
+      "author": this.userName,
+      "comment": this.message,
+      "date": this.date.toISOString(),
+      "emotion": this.emoji,
+    };
+  }
+
   static parseComment(data) {
     return new Comment(data);
   }

@@ -10,8 +10,8 @@ const PopupStatus = {
   HIDE: `hide`,
 };
 
-const renderComments = (commentsContainer, comments, onCommentsDataChange) => {
-  const commentsController = new CommentsController(commentsContainer, onCommentsDataChange);
+const renderComments = (commentsContainer, comments, onCommentsDataChange, film) => {
+  const commentsController = new CommentsController(commentsContainer, onCommentsDataChange, film);
 
   commentsController.render(comments);
 
@@ -23,6 +23,7 @@ export default class MovieController {
     this._container = container;
 
     this._api = api;
+    this._film = null;
 
     this._filmPopupComponent = null;
     this._filmComponent = null;
@@ -42,6 +43,7 @@ export default class MovieController {
   }
 
   render(film) {
+    this._film = film;
     const oldFlmComponent = this._filmComponent;
     const oldFilmPopupComponent = this._filmPopupComponent;
 
@@ -141,14 +143,10 @@ export default class MovieController {
     }
   }
 
-  _renderComments(id) {
+  _renderComments(comments) {
     const filmPopup = this._filmPopupComponent.getElement();
     const commentsContainer = filmPopup.querySelector(`.form-details__bottom-container`);
-
-    this._api.getComments(id)
-      .then((comments) => {
-        this._commentsController = renderComments(commentsContainer, comments, this._onCommentsDataChange);
-      });
+    this._commentsController = renderComments(commentsContainer, comments, this._onCommentsDataChange, this._film);
   }
 
   _removeComments() {
@@ -162,7 +160,10 @@ export default class MovieController {
 
   _updateComments(id) {
     this._removeComments();
-    this._renderComments(id);
+    this._api.getComments(id)
+      .then((comments) => {
+        this._renderComments(comments);
+      });
   }
 
   _onEscKeyDown(evt) {
@@ -175,13 +176,17 @@ export default class MovieController {
     }
   }
 
-  _onCommentsDataChange(oldData, newData) {
-    if (oldData === null) {
-      this._commentsModel.addComment(newData);
-      this._updateComments(newData.id);
-    } else if (newData === null) {
-      this._commentsModel.removeComment(oldData.id);
-      this._updateComments(oldData.id);
+  _onCommentsDataChange(film, oldData, newData) {
+    // if (oldData === null) {
+    //   this._commentsModel.addComment(newData);
+    //   this._updateComments(film.id);
+    // } else
+    if (newData === null) {
+      this._api.deleteComment(oldData)
+        .then(() => {
+          this._commentsModel.removeComment(oldData.id);
+          this._updateComments(film.id);
+        });
     }
   }
 }

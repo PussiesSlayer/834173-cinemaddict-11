@@ -14,8 +14,8 @@ export default class Comments {
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  removeComment(id) {
-    const index = this._comments.findIndex((it) => it.id === id);
+  removeComment(comment) {
+    const index = this._comments.findIndex((it) => it.id === comment.id);
 
     if (index === -1) {
       return false;

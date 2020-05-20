@@ -19,7 +19,7 @@ const renderComments = (commentsContainer, comments, onCommentsDataChange, film)
 };
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange, api) {
+  constructor(container, filmsModel, onDataChange, onViewChange, api) {
     this._container = container;
 
     this._api = api;
@@ -32,6 +32,7 @@ export default class MovieController {
 
     this._commentsController = null;
 
+    this._filmsModel = filmsModel;
     this._commentsModel = new CommentsModel();
 
     this._mode = PopupStatus.HIDE;
@@ -54,7 +55,7 @@ export default class MovieController {
       this._showFilmPopup();
       document.addEventListener(`keydown`, this._onEscKeyDown);
 
-      this._updateComments(film.id);
+      this._updateComments(film);
     });
 
     this._filmPopupComponent.setCloseButtonClickHandler(() => {
@@ -69,8 +70,6 @@ export default class MovieController {
       newFilm.isWantToWatch = !newFilm.isWantToWatch;
 
       this._onDataChange(film, newFilm);
-
-      this._updateComments(film.id);
     };
 
     const changeWatchedStatus = () => {
@@ -79,8 +78,6 @@ export default class MovieController {
       newFilm.isWatched = !newFilm.isWatched;
 
       this._onDataChange(film, newFilm);
-
-      this._updateComments(film.id);
     };
 
     const changeFavoriteStatus = () => {
@@ -89,8 +86,6 @@ export default class MovieController {
       newFilm.isFavorite = !newFilm.isFavorite;
 
       this._onDataChange(film, newFilm);
-
-      this._updateComments(film.id);
     };
 
     this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
@@ -103,9 +98,8 @@ export default class MovieController {
     if (oldFlmComponent && oldFilmPopupComponent) {
       replace(this._filmComponent, oldFlmComponent);
       replace(this._filmPopupComponent, oldFilmPopupComponent);
-
       if (this._mode === PopupStatus.SHOW) {
-        this._updateComments(film.id);
+        this._updateComments(film);
       }
     } else {
       render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
@@ -158,9 +152,9 @@ export default class MovieController {
     this._commentsController = null;
   }
 
-  _updateComments(id) {
+  _updateComments(film) {
     this._removeComments();
-    this._api.getComments(id)
+    this._api.getComments(film)
       .then((comments) => {
         this._renderComments(comments);
       });
@@ -177,15 +171,23 @@ export default class MovieController {
   }
 
   _onCommentsDataChange(film, oldData, newData) {
-    // if (oldData === null) {
-    //   this._commentsModel.addComment(newData);
-    //   this._updateComments(film.id);
-    // } else
+    if (oldData === null) {
+      this._api.createComment(newData, film.id)
+        .then(() => {
+          this._commentsModel.addComment(newData);
+          this._updateComments(film);
+        });
+    } else
     if (newData === null) {
       this._api.deleteComment(oldData)
         .then(() => {
           this._commentsModel.removeComment(oldData.id);
-          this._updateComments(film.id);
+          this._updateComments(film);
+
+          const changedFilm = FilmModel.clone(film);
+          changedFilm.removeComment(oldData.id);
+
+          // this._filmsModel.updateFilm(film.id, changedFilm);
         });
     }
   }

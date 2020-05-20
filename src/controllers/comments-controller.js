@@ -1,5 +1,17 @@
 import CommentsComponent from "../components/comments";
+import CommentModel from "../models/comment";
 import {remove, render, replace, RenderPosition} from "../utils/render";
+import {encode} from "he";
+
+const parseFormData = (formData) => {
+  return new CommentModel({
+    "id": null,
+    "author": `Anonymous`,
+    "comment": encode(formData.get(`comment`)),
+    "date": new Date().toISOString(),
+    "emotion": formData.get(`comment-emoji`)
+  }, null);
+};
 
 export default class CommentsController {
   constructor(container, onCommentsDataChange, film) {
@@ -22,7 +34,9 @@ export default class CommentsController {
 
     this._commentsComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      const data = this._commentsComponent.getData();
+      const formData = this._commentsComponent.getData();
+      const data = parseFormData(formData);
+
       this._onCommentsDataChange(this._film, null, data);
     });
 

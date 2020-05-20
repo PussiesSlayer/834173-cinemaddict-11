@@ -1,5 +1,7 @@
 export default class Comment {
-  constructor(data) {
+  constructor(data, filmId) {
+    this.filmId = filmId;
+
     this.id = data[`id`];
     this.emoji = data[`emotion`];
     this.date = new Date(data[`date`]);
@@ -17,11 +19,13 @@ export default class Comment {
     };
   }
 
-  static parseComment(data) {
-    return new Comment(data);
+  static parseComment(data, filmId) {
+    return new Comment(data, filmId);
   }
 
-  static parseComments(data) {
-    return data.map(Comment.parseComment);
+  static parseComments(data, filmId) {
+    return data.map((rawComment) => {
+      return Comment.parseComment(rawComment, filmId);
+    });
   }
 }

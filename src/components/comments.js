@@ -86,15 +86,6 @@ const createCommentsTemplate = (comments, options = {}) => {
   );
 };
 
-const parseFormData = (formData) => {
-  return {
-    emoji: formData.get(`comment-emoji`),
-    date: new Date(),
-    message: encode(formData.get(`comment`)),
-    userName: `Anonymous`,
-  };
-};
-
 export default class Comments extends AbstractSmartComponent {
   constructor(comments) {
     super();
@@ -142,9 +133,8 @@ export default class Comments extends AbstractSmartComponent {
 
   getData() {
     const form = document.querySelector(`form.film-details__inner`);
-    const formData = new FormData(form);
 
-    return parseFormData(formData);
+    return new FormData(form);
   }
 
   setDeleteButtonClickHandler(handler) {

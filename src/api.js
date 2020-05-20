@@ -28,10 +28,10 @@ const API = class {
       .then(Film.parseFilms);
   }
 
-  getComments(id) {
-    return this._load({url: `comments/${id}`})
+  getComments(film) {
+    return this._load({url: `comments/${film.id}`})
       .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then((data) => Comment.parseComments(data, film.id));
   }
 
   updateFilm(id, data) {
@@ -45,15 +45,20 @@ const API = class {
       .then(Film.parseFilm);
   }
 
-  createComment(film) {
+  createComment(comment, filmId) {
     return this._load({
-      url: `comments/${film.id}`,
+      url: `comments/${filmId}`,
       method: Method.POST,
-      body: JSON.stringify(film.toRaw()),
+      body: JSON.stringify(comment.toRaw()),
       headers: new Headers({"Content-Type": `application/json`}),
     })
       .then((response) => response.json())
-      .then(Comment.parseComment);
+      .then((data) => {
+        return {
+          movie: Film.parseFilm(data.movie),
+          comments: Comment.parseComments(data.comments, filmId),
+        };
+      });
   }
 
   deleteComment(comment) {

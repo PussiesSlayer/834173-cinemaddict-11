@@ -103,6 +103,10 @@ export default class MovieController {
     if (oldFlmComponent && oldFilmPopupComponent) {
       replace(this._filmComponent, oldFlmComponent);
       replace(this._filmPopupComponent, oldFilmPopupComponent);
+
+      if (this._mode === PopupStatus.SHOW) {
+        this._updateComments(film.id);
+      }
     } else {
       render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
     }
@@ -139,11 +143,13 @@ export default class MovieController {
     }
   }
 
-  _renderComments(comments) {
+  _renderComments(id) {
     const filmPopup = this._filmPopupComponent.getElement();
     const commentsContainer = filmPopup.querySelector(`.form-details__bottom-container`);
-
-    this._commentsController = renderComments(commentsContainer, comments, this._onCommentsDataChange);
+    this._api.getComments(id)
+      .then((comments) => {
+        this._commentsController = renderComments(commentsContainer, comments, this._onCommentsDataChange);
+      });
   }
 
   _removeComments() {
@@ -157,10 +163,7 @@ export default class MovieController {
 
   _updateComments(id) {
     this._removeComments();
-    this._api.getComments(id)
-      .then((comments) => {
-        this._renderComments(comments);
-      });
+    this._renderComments(id);
   }
 
   _onEscKeyDown(evt) {
@@ -176,10 +179,10 @@ export default class MovieController {
   _onCommentsDataChange(oldData, newData) {
     if (oldData === null) {
       this._commentsModel.addComment(newData);
-      this._updateComments(this._commentsModel.getComments());
+      this._updateComments(newData.id);
     } else if (newData === null) {
       this._commentsModel.removeComment(oldData.id);
-      this._updateComments(this._commentsModel.getComments());
+      this._updateComments(oldData.id);
     }
   }
 }

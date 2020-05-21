@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component";
-import {TypesButton} from "../consts";
+import {MAX_DESCRIPTION_LENGTH, TypesButton} from "../consts";
 import {normalizeDuration, formatReleaseYear} from "../utils/common";
 
 const createButtonMarkup = (name, isChecked) => {
@@ -28,6 +28,13 @@ const createButtonMarkup = (name, isChecked) => {
   );
 };
 
+const cutDescription = (description) => {
+  const fullLength = description.length;
+  const newDescription = description.substring(0, (MAX_DESCRIPTION_LENGTH - 1)) + `...`;
+
+  return fullLength > MAX_DESCRIPTION_LENGTH ? newDescription : description;
+};
+
 const createFilmCardTemplate = (film, commentsAmount) => {
   const {name, poster, description, userRating, date, duration, genres} = film;
   const year = formatReleaseYear(date);
@@ -36,6 +43,8 @@ const createFilmCardTemplate = (film, commentsAmount) => {
   const watchedButton = createButtonMarkup(TypesButton.WATCHED, film.isWatched);
   const favoriteButton = createButtonMarkup(TypesButton.FAVORITE, film.isFavorite);
   const normalDuration = normalizeDuration(duration);
+
+  const shortDescription = cutDescription(description);
 
   return (
     `<article class="film-card">
@@ -47,7 +56,7 @@ const createFilmCardTemplate = (film, commentsAmount) => {
             <span class="film-card__genre">${genres[0]}</span>
           </p>
           <img src=${poster} alt="${name}" class="film-card__poster">
-          <p class="film-card__description">${description}</p>
+          <p class="film-card__description">${shortDescription}</p>
           <a class="film-card__comments">${commentsAmount} comments</a>
           <form class="film-card__controls">
             ${watchlistButton}

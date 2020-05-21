@@ -37,6 +37,8 @@ export default class CommentsController {
       const formData = this._commentsComponent.getData();
       const data = parseFormData(formData);
 
+      console.log(data);
+
       this._onCommentsDataChange(this._film, null, data);
     });
 

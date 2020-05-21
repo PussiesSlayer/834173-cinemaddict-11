@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {TypesButton} from "../consts";
-import {formatReleaseDate} from "../utils/common";
+import {formatReleaseDate, normalizeDuration} from "../utils/common";
 
 const createCheckboxMarkup = (name, isChecked) => {
   const setDescriptionButton = () => {
@@ -54,6 +54,8 @@ const createFilmPopupTemplate = (film) => {
   const watchedCheckbox = createCheckboxMarkup(TypesButton.WATCHED, film.isWatched);
   const favoriteCheckbox = createCheckboxMarkup(TypesButton.FAVORITE, film.isFavorite);
 
+  const normalDuration = normalizeDuration(duration);
+
   return (
     `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -99,7 +101,7 @@ const createFilmPopupTemplate = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${duration}</td>
+              <td class="film-details__cell">${normalDuration}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>

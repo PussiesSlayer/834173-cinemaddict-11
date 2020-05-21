@@ -28,7 +28,7 @@ export const FilterType = {
 };
 
 export const UserRank = {
-  NOTICE: `Notice`,
+  NOTICE: `Novice`,
   FAN: `Fan`,
   MOVIE_BUFF: `Movie Buff`,
 };

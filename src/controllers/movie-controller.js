@@ -39,7 +39,7 @@ export default class MovieController {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
 
-    this._commentsModel.setCommentsDataChangeHandlers(this._onCommentsDataChange);
+    this._commentsModel.setDataChangeHandlers(this._onCommentsDataChange);
   }
 
   render(film) {
@@ -184,7 +184,7 @@ export default class MovieController {
     if (oldData === null) {
       this._api.createComment(newData, film.id)
         .then(() => {
-          this._commentsModel.addComment(newData);
+          this._commentsModel.add(newData);
           this._updateComments(film);
           this.updateCommentsAmountAfterAdd(film, newData.id);
         })
@@ -195,7 +195,7 @@ export default class MovieController {
     if (newData === null) {
       this._api.deleteComment(oldData)
         .then(() => {
-          this._commentsModel.removeComment(oldData.id);
+          this._commentsModel.remove(oldData.id);
           this._updateComments(film);
 
           this._updateCommentsAmountAfterDelete(film, oldData.id);

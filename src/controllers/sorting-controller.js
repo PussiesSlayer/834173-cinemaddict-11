@@ -30,7 +30,7 @@ export default class SortingController {
     const oldComponent = this._sortingComponent;
 
     this._sortingComponent = new SortingComponent(sortTypes);
-    this._sortingComponent.setSortTypeChangeHandler(this._onSortChange);
+    this._sortingComponent.setTypeChangeHandler(this._onSortChange);
 
     if (oldComponent) {
       replace(this._sortingComponent, oldComponent);

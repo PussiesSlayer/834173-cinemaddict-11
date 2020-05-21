@@ -19,7 +19,7 @@ export default class FilterController {
 
   render() {
     const container = this._container;
-    const allFilms = this._filmsModel.getFilmsAll();
+    const allFilms = this._filmsModel.getAll();
     const filters = Object.values(FilterType).map((type) => {
       return {
         title: type,
@@ -31,7 +31,7 @@ export default class FilterController {
     const oldComponent = this._filterComponent;
 
     this._filterComponent = new FilterComponent(filters);
-    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
+    this._filterComponent.setChangeHandler(this._onFilterChange);
 
     if (oldComponent) {
       replace(this._filterComponent, oldComponent);

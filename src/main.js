@@ -52,7 +52,7 @@ const statisticComponent = new StatisticComponent(filmsModel);
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
 statisticComponent.hide();
 
-siteMenuElement.setMenuClickHandler((menuItem) => {
+siteMenuElement.setClickHandler((menuItem) => {
   switch (menuItem) {
     case MenuItem.FILTER:
       statisticComponent.hide();
@@ -68,20 +68,20 @@ siteMenuElement.setMenuClickHandler((menuItem) => {
 });
 
 filmsModel.setDataLoadHandler(() => {
-  footerStatisticComponent.setCount(filmsModel.getFilmsAll());
+  footerStatisticComponent.setCount(filmsModel.getAll());
 });
 
 filmsModel.setDataChangeHandlers(() => {
-  userRatingComponent.setRank(filmsModel.getFilmsAll());
-  statisticComponent.setRank(filmsModel.getFilmsAll());
+  userRatingComponent.setRank(filmsModel.getAll());
+  statisticComponent.setRank(filmsModel.getAll());
 });
 
 api.getFilms()
   .then((films) => {
-    filmsModel.setFilms(films);
+    filmsModel.set(films);
   })
   .catch(() => {
-    filmsModel.setFilms([]);
+    filmsModel.set([]);
   })
   .finally(() => {
     remove(loadingComponent);

@@ -15,23 +15,23 @@ export default class Movies {
     this._dataLoadHandlers = [];
   }
 
-  getFilms() {
+  get() {
     const filteredFilms = getFilmsByFilter(this._films, this._activeFilterType);
 
     return getSortedFilms(filteredFilms, this._currentSortType);
   }
 
-  getFilmsAll() {
+  getAll() {
     return this._films;
   }
 
-  setFilms(films) {
+  set(films) {
     this._films = films;
     this._callHandlers(this._dataLoadHandlers);
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  updateFilm(id, newData) {
+  update(id, newData) {
     const index = this._films.findIndex((it) => it.id === id);
 
     if (index === -1) {

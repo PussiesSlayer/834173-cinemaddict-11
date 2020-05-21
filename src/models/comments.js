@@ -5,11 +5,11 @@ export default class Comments {
     this._dataChangeHandlers = [];
   }
 
-  getComments() {
-    return this._comments;
+  setDataChangeHandlers(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
-  removeComment(comment) {
+  remove(comment) {
     const index = this._comments.findIndex((it) => it.id === comment.id);
 
     if (index === -1) {
@@ -23,13 +23,9 @@ export default class Comments {
     return true;
   }
 
-  addComment(comment) {
+  add(comment) {
     this._comments = [].concat(comment, this._comments);
     this._callHandlers(this._dataChangeHandlers);
-  }
-
-  setCommentsDataChangeHandlers(handler) {
-    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

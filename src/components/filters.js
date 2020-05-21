@@ -37,7 +37,7 @@ export default class Filters extends AbstractComponent {
     return createFiltersTemplate(this._filters);
   }
 
-  setFilterChangeHandler(handler) {
+  setChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 

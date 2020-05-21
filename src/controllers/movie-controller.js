@@ -175,9 +175,8 @@ export default class MovieController {
     this._filmComponent.updateCommentsAmount(film.comments.length);
   }
 
-  _updateCommentsAmountAfterAdd(film, id) {
+  updateCommentsAmountAfterAdd(film, id) {
     film.addComment(id);
-
     this._filmComponent.updateCommentsAmount(film.comments.length);
   }
 
@@ -187,8 +186,7 @@ export default class MovieController {
         .then(() => {
           this._commentsModel.addComment(newData);
           this._updateComments(film);
-
-          this._updateCommentsAmountAfterAdd(film, newData.id);
+          this.updateCommentsAmountAfterAdd(film, newData.id);
         })
         .catch(() => {
           commentsController.shakeForAdd();

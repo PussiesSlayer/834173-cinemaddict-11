@@ -32,6 +32,8 @@ export default class PageController {
 
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._noFilmsComponent = new NoFilmsComponent();
+    this._mostCommentedComponent = new MostCommentedComponent();
+    this._topRatedComponent = new TopRatedComponent();
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -130,10 +132,13 @@ export default class PageController {
       return;
     }
 
-    const mostCommentedComponent = new MostCommentedComponent();
-    render(container, mostCommentedComponent, RenderPosition.BEFOREEND);
+    if (this._mostCommentedComponent !== null) {
+      remove(this._mostCommentedComponent);
+    }
 
-    const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
+    render(container, this._mostCommentedComponent, RenderPosition.BEFOREEND);
+
+    const filmsMostCommentedContainerElement = this._mostCommentedComponent.getElement().querySelector(`.films-list__container`);
 
     const newMostCommentedFilms = renderFilms(filmsMostCommentedContainerElement, mostCommentedFilms, this._onDataChange, this._onViewChange, this._api);
     this._mostCommentedFilmsControllers = this._mostCommentedFilmsControllers.concat(newMostCommentedFilms);
@@ -149,10 +154,9 @@ export default class PageController {
       return;
     }
 
-    const topRatedComponent = new TopRatedComponent();
-    render(container, topRatedComponent, RenderPosition.BEFOREEND);
+    render(container, this._topRatedComponent, RenderPosition.BEFOREEND);
 
-    const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
+    const filmsTopRatedContainerElement = this._topRatedComponent.getElement().querySelector(`.films-list__container`);
 
     const newTopRatedFilms = renderFilms(filmsTopRatedContainerElement, topRatedFilms, this._onDataChange, this._onViewChange, this._api);
     this._topRatedFilmControllers = this._topRatedFilmControllers.concat(newTopRatedFilms);

@@ -31,7 +31,7 @@ export default class CommentsController {
     this._commentsComponent.setDeleteButtonClickHandler((evt, i) => {
       evt.preventDefault();
 
-      setTimeout(this._commentsComponent.setData(SendingData.deleteButtonText), 10000);
+      this._commentsComponent.disabledDeleteButton(evt);
 
       this._onCommentsDataChange(this, this._film, comments[i], null);
     });
@@ -68,8 +68,7 @@ export default class CommentsController {
     this._commentsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
 
     setTimeout(() => {
-      //РАЗБЛОКИРОВАТЬ КОПКИ УДАЛЕНИЯ
-      this._commentsComponent.setData(DefaultData.deleteButtonText);
+      this._commentsComponent.enableDeleteButton();
       this._commentsComponent.getElement().style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
   }

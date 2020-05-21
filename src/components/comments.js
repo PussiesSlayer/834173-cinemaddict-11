@@ -1,10 +1,13 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateOfComment} from "../utils/common";
-import {EMOGIES, DefaultData, SendingData} from "../consts";
+import {EMOGIES} from "../consts";
+
+const DeleteButtonLabel = {
+  DISABLED: `Deleteing...`,
+  ENABLED: `Delete`,
+};
 
 const createCommentsMarkup = (comments) => {
-  const deleteButtonText = DefaultData.deleteButtonText;
-
   return comments
     .map((comment) => {
       const commentDate = formatDateOfComment(comment.date);
@@ -19,7 +22,7 @@ const createCommentsMarkup = (comments) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.userName}</span>
                 <span class="film-details__comment-day">${commentDate}</span>
-                <button class="film-details__comment-delete">${deleteButtonText}</button>
+                <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>
           </li>
@@ -123,10 +126,24 @@ export default class Comments extends AbstractSmartComponent {
     this.setSubmitHandler(this._submitInitialHandler);
   }
 
-  setData(data) {
-    const deleteButton = this.getElement().querySelector(`.film-details__comment-delete`);
+  disabledDeleteButton(evt) {
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
 
-    deleteButton.textContent = data;
+    deleteButtons.forEach((button) => {
+      if (button === evt.target) {
+        evt.target.disabled = true;
+        evt.target.textContent = DeleteButtonLabel.DISABLED;
+      }
+    });
+  }
+
+  enableDeleteButton() {
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    deleteButtons.forEach((button) => {
+      button.disabled = false;
+      button.textContent = DeleteButtonLabel.ENABLED;
+    });
   }
 
   rerender() {

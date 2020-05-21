@@ -9,6 +9,10 @@ export default class Comments {
     return this._comments;
   }
 
+  setCommentsDataChangeHandlers(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+
   removeComment(comment) {
     const index = this._comments.findIndex((it) => it.id === comment.id);
 
@@ -26,10 +30,6 @@ export default class Comments {
   addComment(comment) {
     this._comments = [].concat(comment, this._comments);
     this._callHandlers(this._dataChangeHandlers);
-  }
-
-  setCommentsDataChangeHandlers(handler) {
-    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

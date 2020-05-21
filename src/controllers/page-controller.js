@@ -4,7 +4,7 @@ import TopRatedComponent from "../components/top-rated";
 import MostCommentedComponent from "../components/most-commented";
 import MovieController from "./movie-controller";
 import {remove, render, RenderPosition} from "../utils/render";
-import {CARDS_COUNT_SPECIAL, CARDS_COUNT_DEFAULT, CARDS_COUNT_BY_BUTTON, NO_FILMS} from "../consts";
+import {CARDS_COUNT_DEFAULT, CARDS_COUNT_BY_BUTTON, NO_FILMS} from "../consts";
 import {getMostCommentedFilms, getTopRatedFilms} from "../utils/extra-films";
 
 const renderFilms = (filmsListElement, films, onDataChange, onViewChange, api) => {
@@ -53,7 +53,8 @@ export default class PageController {
       render(filmsListWrap, this._noFilmsComponent, RenderPosition.BEFOREEND);
     }
 
-    this._renderExtraBlocks(container, films, this._onDataChange, this._onViewChange, this._api);
+    this._renderTopRatedBlock();
+    this._renderMostCommentedBlock();
     this._renderFilms(films.slice(0, this._showingFilmsCount));
     this._renderShowMoreButton();
   }
@@ -119,16 +120,10 @@ export default class PageController {
     }
   }
 
-  _renderExtraBlocks(container, films, onDataChange, onViewChange, api) {
-    if (films.length === NO_FILMS) {
-      return;
-    }
+  _renderMostCommentedBlock() {
+    const container = this._container.getElement();
+    const films = this._filmsModel.getFilms();
 
-    this._renderTopRatedBlock(container, films, onDataChange, onViewChange, api);
-    this._renderMostCommentedBlock(container, films, onDataChange, onViewChange, api);
-  }
-
-  _renderMostCommentedBlock(container, films, onDataChange, onViewChange, api) {
     const mostCommentedFilms = getMostCommentedFilms(films);
 
     if (mostCommentedFilms.length === 0) {
@@ -140,12 +135,14 @@ export default class PageController {
 
     const filmsMostCommentedContainerElement = mostCommentedComponent.getElement().querySelector(`.films-list__container`);
 
-    const newMostCommentedFilms = renderFilms(filmsMostCommentedContainerElement, mostCommentedFilms, onDataChange, onViewChange, api);
+    const newMostCommentedFilms = renderFilms(filmsMostCommentedContainerElement, mostCommentedFilms, this._onDataChange, this._onViewChange, this._api);
     this._mostCommentedFilmsControllers = this._mostCommentedFilmsControllers.concat(newMostCommentedFilms);
-
   }
 
-  _renderTopRatedBlock(container, films, onDataChange, onViewChange, api) {
+  _renderTopRatedBlock() {
+    const container = this._container.getElement();
+    const films = this._filmsModel.getFilms();
+
     const topRatedFilms = getTopRatedFilms(films);
 
     if (topRatedFilms.length === 0) {
@@ -157,8 +154,7 @@ export default class PageController {
 
     const filmsTopRatedContainerElement = topRatedComponent.getElement().querySelector(`.films-list__container`);
 
-    const newTopRatedFilms = renderFilms(filmsTopRatedContainerElement, topRatedFilms, onDataChange, onViewChange, api);
-    this._topRatedFilmControllers = this._topRatedFilmControllers.concat(newTopRatedFilms);
+    const newTopRatedFilms = renderFilms(filmsTopRatedContainerElement, topRatedFilms, this._onDataChange, this._onViewChange, this._api);
     this._topRatedFilmControllers = this._topRatedFilmControllers.concat(newTopRatedFilms);
   }
 

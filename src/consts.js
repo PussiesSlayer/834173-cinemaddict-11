@@ -4,6 +4,7 @@ export const CARDS_COUNT_BY_BUTTON = 5;
 export const CARDS_COUNT_SPECIAL = 2;
 export const NO_FILMS = 0;
 export const MAX_DESCRIPTION_LENGTH = 140;
+export const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const EMOGIES = [`angry`, `puke`, `sleeping`, `smile`];
 

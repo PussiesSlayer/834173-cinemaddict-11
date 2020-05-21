@@ -181,7 +181,7 @@ export default class MovieController {
     this._filmComponent.updateCommentsAmount(film.comments.length);
   }
 
-  _onCommentsDataChange(film, oldData, newData) {
+  _onCommentsDataChange(commentsController, film, oldData, newData) {
     if (oldData === null) {
       this._api.createComment(newData, film.id)
         .then(() => {
@@ -189,6 +189,9 @@ export default class MovieController {
           this._updateComments(film);
 
           this._updateCommentsAmountAfterAdd(film, newData.id);
+        })
+        .catch(() => {
+          commentsController.shake();
         });
     } else
     if (newData === null) {
@@ -198,6 +201,9 @@ export default class MovieController {
           this._updateComments(film);
 
           this._updateCommentsAmountAfterDelete(film, oldData.id);
+        })
+        .catch(() => {
+          commentsController.shake();
         });
     }
   }

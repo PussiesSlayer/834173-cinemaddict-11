@@ -1,6 +1,7 @@
 import CommentsComponent from "../components/comments";
 import CommentModel from "../models/comment";
 import {remove, render, replace, RenderPosition} from "../utils/render";
+import {SHAKE_ANIMATION_TIMEOUT} from "../consts";
 import {encode} from "he";
 
 const parseFormData = (formData) => {
@@ -43,7 +44,7 @@ export default class CommentsController {
 
       // this._commentsComponent.disabledForm();
 
-      this._onCommentsDataChange(this._film, null, data);
+      this._onCommentsDataChange(this, this._film, null, data);
     });
 
     if (oldCommentsComponent) {
@@ -51,6 +52,14 @@ export default class CommentsController {
     } else {
       render(this._container, this._commentsComponent, RenderPosition.BEFOREEND);
     }
+  }
+
+  shake() {
+    this._commentsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
+
+    setTimeout(() => {
+      this._commentsComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   destroy() {

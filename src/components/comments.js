@@ -190,4 +190,13 @@ export default class Comments extends AbstractSmartComponent {
       });
     });
   }
+
+  disabledForm() {
+    this._formIsAvailable = false;
+    // this.rerender();
+  }
+
+  unlockForm() {
+    this._formIsAvailable = true;
+  }
 }

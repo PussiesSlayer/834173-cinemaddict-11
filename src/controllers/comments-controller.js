@@ -37,7 +37,11 @@ export default class CommentsController {
       const formData = this._commentsComponent.getData();
       const data = parseFormData(formData);
 
-      console.log(data);
+      // if (data.emoji === null || data.message === ``) {
+      //   console.log(this._commentsComponent);
+      // }
+
+      // this._commentsComponent.disabledForm();
 
       this._onCommentsDataChange(this._film, null, data);
     });

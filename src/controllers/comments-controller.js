@@ -38,11 +38,7 @@ export default class CommentsController {
       const formData = this._commentsComponent.getData();
       const data = parseFormData(formData);
 
-      // if (data.emoji === null || data.message === ``) {
-      //   console.log(this._commentsComponent);
-      // }
-
-      // this._commentsComponent.disabledForm();
+      this._commentsComponent.disabledForm();
 
       this._onCommentsDataChange(this, this._film, null, data);
     });
@@ -54,11 +50,22 @@ export default class CommentsController {
     }
   }
 
-  shake() {
-    this._commentsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
-    this._commentsComponent.addError();
+  shakeForAdd() {
+    const newCommentForm = this._commentsComponent.getElement().querySelector(`.film-details__new-comment`);
+    newCommentForm.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
 
     setTimeout(() => {
+      this._commentsComponent.getElement().style.animation = ``;
+      this._commentsComponent.enableForm();
+      this._commentsComponent.addError();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  shakeForDelete() {
+    this._commentsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
+
+    setTimeout(() => {
+      //РАЗБЛОКИРОВАТЬ КОПКИ УДАЛЕНИЯ
       this._commentsComponent.getElement().style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
   }

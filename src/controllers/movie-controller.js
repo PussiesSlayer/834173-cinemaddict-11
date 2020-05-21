@@ -191,7 +191,7 @@ export default class MovieController {
           this._updateCommentsAmountAfterAdd(film, newData.id);
         })
         .catch(() => {
-          commentsController.shake();
+          commentsController.shakeForAdd();
         });
     } else
     if (newData === null) {
@@ -203,7 +203,7 @@ export default class MovieController {
           this._updateCommentsAmountAfterDelete(film, oldData.id);
         })
         .catch(() => {
-          commentsController.shake();
+          commentsController.shakeForDelete();
         });
     }
   }

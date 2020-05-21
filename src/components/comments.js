@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateOfComment} from "../utils/common";
-import {EMOGIES, RED_SHINING_STYLE} from "../consts";
+import {EMOGIES} from "../consts";
 
 const createCommentsMarkup = (comments) => {
   return comments
@@ -226,10 +226,11 @@ export default class Comments extends AbstractSmartComponent {
 
   disabledForm() {
     this._formIsAvailable = false;
-    // this.rerender();
+    this.rerender();
   }
 
-  unlockForm() {
+  enableForm() {
     this._formIsAvailable = true;
+    this.rerender();
   }
 }

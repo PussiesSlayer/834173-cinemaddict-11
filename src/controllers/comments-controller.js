@@ -30,7 +30,7 @@ export default class CommentsController {
 
     this._commentsComponent.setDeleteButtonClickHandler((evt, i) => {
       evt.preventDefault();
-      this._onCommentsDataChange(this._film, comments[i], null);
+      this._onCommentsDataChange(this, this._film, comments[i], null);
     });
 
     this._commentsComponent.setSubmitHandler((evt) => {
@@ -56,6 +56,7 @@ export default class CommentsController {
 
   shake() {
     this._commentsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
+    this._commentsComponent.addRedShining();
 
     setTimeout(() => {
       this._commentsComponent.getElement().style.animation = ``;

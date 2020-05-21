@@ -1100,3 +1100,6 @@ button {
 .shake {
   animation: shake 0.6s;
 }
+.error {
+  box-shadow: 0 0 15px 0 #ff0000;
+}

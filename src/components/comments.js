@@ -1,6 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateOfComment} from "../utils/common";
-import {EMOGIES} from "../consts";
+import {EMOGIES, RED_SHINING_STYLE} from "../consts";
 
 const createCommentsMarkup = (comments) => {
   return comments
@@ -189,6 +189,12 @@ export default class Comments extends AbstractSmartComponent {
         this.rerender();
       });
     });
+  }
+
+  addRedShining() {
+    const element = this.getElement().querySelector(`.film-details__comment-input`);
+
+    element.classList.add(`error`);
   }
 
   disabledForm() {

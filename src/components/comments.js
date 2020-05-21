@@ -45,7 +45,7 @@ const createInstallEmojiMarkup = (emogies, chosenEmoji) => {
     }).join(`\n`);
 };
 
-const createNewCommentMarkup = (chosenEmoji, formIsAvailable) => {
+const createNewCommentMarkup = (chosenEmoji, formIsAvailable, commentText) => {
   const installingEmojiMarkup = createInstallEmojiMarkup(EMOGIES, chosenEmoji);
 
   return (
@@ -55,7 +55,7 @@ const createNewCommentMarkup = (chosenEmoji, formIsAvailable) => {
           </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${formIsAvailable ? `` : `disabled`}></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${formIsAvailable ? `` : `disabled`}>${commentText}</textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -66,10 +66,10 @@ const createNewCommentMarkup = (chosenEmoji, formIsAvailable) => {
 };
 
 const createCommentsTemplate = (comments, options = {}) => {
-  const {chosenEmoji, formIsAvailable} = options;
+  const {chosenEmoji, formIsAvailable, commentText} = options;
 
   const commentsMarkup = createCommentsMarkup(comments);
-  const newCommentMarkup = createNewCommentMarkup(chosenEmoji, formIsAvailable);
+  const newCommentMarkup = createNewCommentMarkup(chosenEmoji, formIsAvailable, commentText);
 
   return (
     `<section class="film-details__comments-wrap">
@@ -91,6 +91,7 @@ export default class Comments extends AbstractSmartComponent {
 
     this._comments = comments;
     this._chosenEmoji = null;
+    this._commentText = ``;
     this._formIsAvailable = true;
 
     this._deleteButtonCLickHandler = null;
@@ -103,17 +104,20 @@ export default class Comments extends AbstractSmartComponent {
     this._submitGenerateHandler = null;
 
     this._setEmojiRadioChangeHandler();
+    this._setTextareaChangeHandler();
   }
 
   getTemplate() {
     return createCommentsTemplate(this._comments, {
       chosenEmoji: this._chosenEmoji,
       formIsAvailable: this._formIsAvailable,
+      commentText: this._commentText,
     });
   }
 
   recoveryListeners() {
     this._setEmojiRadioChangeHandler();
+    this._setTextareaChangeHandler();
     this.setDeleteButtonClickHandler(this._deleteButtonCLickHandler);
     this.setSubmitHandler(this._submitInitialHandler);
   }
@@ -185,16 +189,39 @@ export default class Comments extends AbstractSmartComponent {
       emoji.addEventListener(`change`, (evt) => {
         this._chosenEmoji = evt.target.value;
 
+        this._removeError();
         this.removeEvents();
-        this.rerender();
+        this._setCommentAfterUpdate();
       });
     });
   }
 
-  addRedShining() {
+  _setCommentAfterUpdate() {
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+    comment.value = this._commentText;
+    this.rerender();
+  }
+
+  _setTextareaChangeHandler() {
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+
+    comment.addEventListener(`input`, (evt) => {
+      this._commentText = evt.target.value;
+
+      this._removeError();
+    });
+  }
+
+  addError() {
     const element = this.getElement().querySelector(`.film-details__comment-input`);
 
     element.classList.add(`error`);
+  }
+
+  _removeError() {
+    const element = this.getElement().querySelector(`.film-details__comment-input`);
+
+    element.classList.remove(`error`);
   }
 
   disabledForm() {

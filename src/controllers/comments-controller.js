@@ -56,7 +56,7 @@ export default class CommentsController {
 
   shake() {
     this._commentsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
-    this._commentsComponent.addRedShining();
+    this._commentsComponent.addError();
 
     setTimeout(() => {
       this._commentsComponent.getElement().style.animation = ``;

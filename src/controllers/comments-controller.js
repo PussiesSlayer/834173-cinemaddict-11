@@ -1,7 +1,7 @@
 import CommentsComponent from "../components/comments";
 import CommentModel from "../models/comment";
 import {remove, render, replace, RenderPosition} from "../utils/render";
-import {DefaultData, SendingData, SHAKE_ANIMATION_TIMEOUT} from "../consts";
+import {SHAKE_ANIMATION_TIMEOUT} from "../consts";
 import {encode} from "he";
 
 const parseFormData = (formData) => {

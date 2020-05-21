@@ -1,10 +1,6 @@
 import {MINUTES_IN_HOUR, UserRank} from "../consts";
 import moment from "moment";
 
-export const getRandomNumber = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
 export const normalizeDuration = (duration) => {
   const hours = `${Math.floor(duration / MINUTES_IN_HOUR)}`;
   const minutes = `${duration % MINUTES_IN_HOUR}`;
@@ -34,7 +30,6 @@ export const formatReleaseYear = (date) => {
 };
 
 export const formatDateOfComment = (date) => {
-  // return moment(date).format(`YYYY/MM/DD H:mm`);
   return moment(date).fromNow();
 };
 

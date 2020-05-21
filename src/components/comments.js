@@ -3,7 +3,7 @@ import {formatDateOfComment} from "../utils/common";
 import {EMOGIES} from "../consts";
 
 const DeleteButtonLabel = {
-  DISABLED: `Deleteing...`,
+  DISABLED: `Deleting...`,
   ENABLED: `Delete`,
 };
 
@@ -148,12 +148,6 @@ export default class Comments extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
-  }
-
-  reset() {
-    this._chosenEmoji = null;
-
-    this.rerender();
   }
 
   removeElement() {

@@ -19,13 +19,13 @@ export default class Comment {
     };
   }
 
-  static parseComment(data, filmId) {
+  static parse(data, filmId) {
     return new Comment(data, filmId);
   }
 
-  static parseComments(data, filmId) {
+  static parseAll(data, filmId) {
     return data.map((rawComment) => {
-      return Comment.parseComment(rawComment, filmId);
+      return Comment.parse(rawComment, filmId);
     });
   }
 }

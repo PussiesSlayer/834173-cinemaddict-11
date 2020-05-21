@@ -25,13 +25,13 @@ const API = class {
   getFilms() {
     return this._load({url: `movies`})
       .then((response) => response.json())
-      .then(Film.parseFilms);
+      .then(Film.parseAll);
   }
 
   getComments(film) {
     return this._load({url: `comments/${film.id}`})
       .then((response) => response.json())
-      .then((data) => Comment.parseComments(data, film.id));
+      .then((data) => Comment.parseAll(data, film.id));
   }
 
   updateFilm(id, data) {
@@ -42,7 +42,7 @@ const API = class {
       headers: new Headers({"Content-Type": `application/json`}),
     })
       .then((response) => response.json())
-      .then(Film.parseFilm);
+      .then(Film.parse);
   }
 
   createComment(comment, filmId) {
@@ -56,7 +56,7 @@ const API = class {
       .then((data) => {
         return {
           movie: Film.parseFilm(data.movie),
-          comments: Comment.parseComments(data.comments, filmId),
+          comments: Comment.parseAll(data.comments, filmId),
         };
       });
   }

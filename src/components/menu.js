@@ -14,7 +14,7 @@ export default class Menu extends AbstractComponent {
     return createMenuTemplate();
   }
 
-  setMenuClickHandler(handler) {
+  setClickHandler(handler) {
     const element = this.getElement();
 
     element

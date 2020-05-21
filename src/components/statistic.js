@@ -194,7 +194,7 @@ const createStatisticTemplate = (watchedFilms, datePeriod, rank) => {
 };
 
 const getFilmForStatisticFromModel = (filmsModel) => {
-  const allFilms = filmsModel.getFilmsAll();
+  const allFilms = filmsModel.getAll();
 
   return getWatchedFilms(allFilms);
 };

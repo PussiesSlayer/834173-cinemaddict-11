@@ -47,7 +47,7 @@ export default class PageController {
 
   render() {
     const container = this._container.getElement();
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.get();
 
     const filmsListWrap = container.querySelector(`.films-list`);
 
@@ -87,7 +87,7 @@ export default class PageController {
 
   _updateFilms(count) {
     this._removeFilms();
-    this._renderFilms(this._filmsModel.getFilms().slice(0, count));
+    this._renderFilms(this._filmsModel.get().slice(0, count));
     this._renderShowMoreButton();
   }
 
@@ -97,7 +97,7 @@ export default class PageController {
 
     remove(this._showMoreButtonComponent);
 
-    if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
+    if (this._showingFilmsCount >= this._filmsModel.get().length) {
       return;
     }
 
@@ -112,7 +112,7 @@ export default class PageController {
 
     const prevFilmsCount = this._showingFilmsCount;
     this._showingFilmsCount = this._showingFilmsCount + CARDS_COUNT_BY_BUTTON;
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.get();
 
     const newFilms = renderFilms(filmsListElement, films.slice(prevFilmsCount, this._showingFilmsCount), this._onDataChange, this._onViewChange, this._api);
     this._showedFilmControllers = this._showedFilmControllers.concat(newFilms);
@@ -124,7 +124,7 @@ export default class PageController {
 
   _renderMostCommentedBlock() {
     const container = this._container.getElement();
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.get();
 
     const mostCommentedFilms = getMostCommentedFilms(films);
 
@@ -146,7 +146,7 @@ export default class PageController {
 
   _renderTopRatedBlock() {
     const container = this._container.getElement();
-    const films = this._filmsModel.getFilms();
+    const films = this._filmsModel.get();
 
     const topRatedFilms = getTopRatedFilms(films);
 
@@ -173,7 +173,7 @@ export default class PageController {
   _onDataChange(oldData, newData) {
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
-        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
+        const isSuccess = this._filmsModel.update(oldData.id, filmModel);
 
         if (isSuccess) {
           [...this._showedFilmControllers, ...this._topRatedFilmControllers, ...this._mostCommentedFilmsControllers]

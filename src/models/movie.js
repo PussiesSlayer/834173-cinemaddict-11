@@ -40,7 +40,7 @@ export default class Film {
         "writers": this.writers,
         "actors": this.actors,
         "release": {
-          "date": this.date,
+          "date": this.date.toISOString(),
           "release_country": this.country
         },
         "runtime": this.duration,
@@ -50,7 +50,7 @@ export default class Film {
       "user_details": {
         "watchlist": this.isWantToWatch,
         "already_watched": this.isWatched,
-        "watching_date": this.watchedDate,
+        "watching_date": this.watchedDate.toISOString(),
         "favorite": this.isFavorite
       }
     };
@@ -66,5 +66,13 @@ export default class Film {
 
   static clone(data) {
     return new Film(data.toRaw());
+  }
+
+  removeComment(id) {
+    this.comments = this.comments.filter((it) => it !== id);
+  }
+
+  addComment(id) {
+    this.comments = [].concat(id, this.comments);
   }
 }

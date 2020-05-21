@@ -6,9 +6,11 @@ import StatisticComponent from "./components/statistic";
 import LoadingComponent from "./components/loading";
 import PageController from "./controllers/page-controller";
 import FilterController from "./controllers/filter-controller";
+import SortingController from "./controllers/sorting-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render, remove} from "./utils/render";
 import API from "./api";
+import {MenuItem} from "./consts";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);
@@ -20,13 +22,18 @@ const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const api = new API(END_POINT, AUTHORIZATION);
 
 const siteMenuElement = new MenuComponent();
+render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
 
 const filmsModel = new FilmsModel();
 
-render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
+const userRatingComponent = new UserRatingComponent();
+render(siteHeaderElement, userRatingComponent, RenderPosition.BEFOREEND);
 
 const filterController = new FilterController(siteMenuElement.getElement(), filmsModel);
 filterController.render();
+
+const sortingController = new SortingController(siteMenuElement.getElement(), filmsModel);
+sortingController.render();
 
 const filmsBlock = new FilmsBlockComponent();
 
@@ -38,39 +45,45 @@ const pageController = new PageController(filmsBlock, filmsModel, api);
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
 const footerStatisticElement = footerElement.querySelector(`.footer__statistics`);
+const footerStatisticComponent = new FooterStatisticComponent();
+render(footerStatisticElement, footerStatisticComponent, RenderPosition.BEFOREEND);
 
-// TODO: переписать статистику на контроллер, чтобы можно было не передавать фильмы здесь; контроллер статистики рендерить в апи при загрузке фильмов
-
-const statisticComponent = new StatisticComponent(filmsModel.getFilmsAll());
+const statisticComponent = new StatisticComponent(filmsModel);
 render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
 statisticComponent.hide();
 
-siteMenuElement.setStatsClickHandler((evt) => {
-  evt.preventDefault();
-
-  pageController.hide();
-  statisticComponent.show();
+siteMenuElement.setMenuClickHandler((menuItem) => {
+  switch (menuItem) {
+    case MenuItem.FILTER:
+      statisticComponent.hide();
+      sortingController.show();
+      pageController.show();
+      break;
+    case MenuItem.STATS:
+      sortingController.hide();
+      pageController.hide();
+      statisticComponent.show();
+      break;
+  }
 });
 
-// TODO: Обработчик клика по фильтру живет недолго. Возможное решение: переписать filterController на menuController, где будут обработчики и клика на фильтр и на статистику
+filmsModel.setDataLoadHandler(() => {
+  footerStatisticComponent.setCount(filmsModel.getFilmsAll());
+});
 
-filterController.setFilterClickHandler(() => {
-  statisticComponent.hide();
-
-  pageController.show();
+filmsModel.setDataChangeHandlers(() => {
+  userRatingComponent.setRank(filmsModel.getFilmsAll());
+  statisticComponent.setRank(filmsModel.getFilmsAll());
 });
 
 api.getFilms()
   .then((films) => {
     filmsModel.setFilms(films);
   })
+  .catch(() => {
+    filmsModel.setFilms([]);
+  })
   .finally(() => {
     remove(loadingComponent);
-
-    const allFilms = filmsModel.getFilmsAll();
-
     pageController.render();
-
-    render(siteHeaderElement, new UserRatingComponent(allFilms), RenderPosition.BEFOREEND);
-    render(footerStatisticElement, new FooterStatisticComponent(allFilms), RenderPosition.BEFOREEND);
   });

@@ -1,7 +1,11 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateOfComment} from "../utils/common";
 import {EMOGIES} from "../consts";
-import {encode} from "he";
+
+const DeleteButtonLabel = {
+  DISABLED: `Deleting...`,
+  ENABLED: `Delete`,
+};
 
 const createCommentsMarkup = (comments) => {
   return comments
@@ -46,7 +50,7 @@ const createInstallEmojiMarkup = (emogies, chosenEmoji) => {
     }).join(`\n`);
 };
 
-const createNewCommentMarkup = (chosenEmoji) => {
+const createNewCommentMarkup = (chosenEmoji, commentText) => {
   const installingEmojiMarkup = createInstallEmojiMarkup(EMOGIES, chosenEmoji);
 
   return (
@@ -56,7 +60,7 @@ const createNewCommentMarkup = (chosenEmoji) => {
           </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"}>${commentText}</textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -67,10 +71,11 @@ const createNewCommentMarkup = (chosenEmoji) => {
 };
 
 const createCommentsTemplate = (comments, options = {}) => {
-  const {chosenEmoji} = options;
+  const {chosenEmoji, commentText, externalData} = options;
 
-  const commentsMarkup = createCommentsMarkup(comments);
-  const newCommentMarkup = createNewCommentMarkup(chosenEmoji);
+  const commentsMarkup = createCommentsMarkup(comments, {externalData});
+
+  const newCommentMarkup = createNewCommentMarkup(chosenEmoji, commentText);
 
   return (
     `<section class="film-details__comments-wrap">
@@ -86,21 +91,13 @@ const createCommentsTemplate = (comments, options = {}) => {
   );
 };
 
-const parseFormData = (formData) => {
-  return {
-    emoji: formData.get(`comment-emoji`),
-    date: new Date(),
-    message: encode(formData.get(`comment`)),
-    userName: `Anonymous`,
-  };
-};
-
 export default class Comments extends AbstractSmartComponent {
   constructor(comments) {
     super();
 
     this._comments = comments;
     this._chosenEmoji = null;
+    this._commentText = ``;
 
     this._deleteButtonCLickHandler = null;
 
@@ -112,28 +109,45 @@ export default class Comments extends AbstractSmartComponent {
     this._submitGenerateHandler = null;
 
     this._setEmojiRadioChangeHandler();
+    this._setTextareaChangeHandler();
   }
 
   getTemplate() {
     return createCommentsTemplate(this._comments, {
       chosenEmoji: this._chosenEmoji,
+      commentText: this._commentText,
     });
   }
 
   recoveryListeners() {
     this._setEmojiRadioChangeHandler();
+    this._setTextareaChangeHandler();
     this.setDeleteButtonClickHandler(this._deleteButtonCLickHandler);
     this.setSubmitHandler(this._submitInitialHandler);
   }
 
-  rerender() {
-    super.rerender();
+  disabledDeleteButton(evt) {
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    deleteButtons.forEach((button) => {
+      if (button === evt.target) {
+        evt.target.disabled = true;
+        evt.target.textContent = DeleteButtonLabel.DISABLED;
+      }
+    });
   }
 
-  reset() {
-    this._chosenEmoji = null;
+  enableDeleteButton() {
+    const deleteButtons = this.getElement().querySelectorAll(`.film-details__comment-delete`);
 
-    this.rerender();
+    deleteButtons.forEach((button) => {
+      button.disabled = false;
+      button.textContent = DeleteButtonLabel.ENABLED;
+    });
+  }
+
+  rerender() {
+    super.rerender();
   }
 
   removeElement() {
@@ -142,9 +156,8 @@ export default class Comments extends AbstractSmartComponent {
 
   getData() {
     const form = document.querySelector(`form.film-details__inner`);
-    const formData = new FormData(form);
 
-    return parseFormData(formData);
+    return new FormData(form);
   }
 
   setDeleteButtonClickHandler(handler) {
@@ -194,9 +207,50 @@ export default class Comments extends AbstractSmartComponent {
       emoji.addEventListener(`change`, (evt) => {
         this._chosenEmoji = evt.target.value;
 
+        this._removeError();
         this.removeEvents();
-        this.rerender();
+        this._setCommentAfterUpdate();
       });
     });
+  }
+
+  _setCommentAfterUpdate() {
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+    comment.value = this._commentText;
+    this.rerender();
+  }
+
+  _setTextareaChangeHandler() {
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+
+    comment.addEventListener(`input`, (evt) => {
+      this._commentText = evt.target.value;
+
+      this._removeError();
+    });
+  }
+
+  addError() {
+    const element = this.getElement().querySelector(`.film-details__comment-input`);
+
+    element.classList.add(`error`);
+  }
+
+  _removeError() {
+    const element = this.getElement().querySelector(`.film-details__comment-input`);
+
+    element.classList.remove(`error`);
+  }
+
+  disabledForm() {
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+
+    comment.disabled = true;
+  }
+
+  enableForm() {
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+
+    comment.disabled = false;
   }
 }

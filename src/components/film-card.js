@@ -1,5 +1,5 @@
-import AbstractComponent from "./abstract-component";
-import {TypesButton} from "../consts";
+import AbstractSmartComponent from "./abstract-smart-component";
+import {MAX_DESCRIPTION_LENGTH, TypesButton} from "../consts";
 import {normalizeDuration, formatReleaseYear} from "../utils/common";
 
 const createButtonMarkup = (name, isChecked) => {
@@ -22,13 +22,20 @@ const createButtonMarkup = (name, isChecked) => {
   };
 
   return (
-    `<button class="film-card__controls-item button film-card__controls-item--${setNameForClass()} ${isChecked ? `film-card__controls-item--active` : ``}">
+    `<button type="button" class="film-card__controls-item button film-card__controls-item--${setNameForClass()} ${isChecked ? `film-card__controls-item--active` : ``}">
       ${name === TypesButton.WATCHLIST ? `Add to ${name}` : `Mark as ${name}`}
      </button>`
   );
 };
 
-const createFilmCardTemplate = (film, comments) => {
+const cutDescription = (description) => {
+  const fullLength = description.length;
+  const newDescription = description.substring(0, (MAX_DESCRIPTION_LENGTH - 1)) + `...`;
+
+  return fullLength > MAX_DESCRIPTION_LENGTH ? newDescription : description;
+};
+
+const createFilmCardTemplate = (film, commentsAmount) => {
   const {name, poster, description, userRating, date, duration, genres} = film;
   const year = formatReleaseYear(date);
 
@@ -36,6 +43,8 @@ const createFilmCardTemplate = (film, comments) => {
   const watchedButton = createButtonMarkup(TypesButton.WATCHED, film.isWatched);
   const favoriteButton = createButtonMarkup(TypesButton.FAVORITE, film.isFavorite);
   const normalDuration = normalizeDuration(duration);
+
+  const shortDescription = cutDescription(description);
 
   return (
     `<article class="film-card">
@@ -47,8 +56,8 @@ const createFilmCardTemplate = (film, comments) => {
             <span class="film-card__genre">${genres[0]}</span>
           </p>
           <img src=${poster} alt="${name}" class="film-card__poster">
-          <p class="film-card__description">${description}</p>
-          <a class="film-card__comments">${comments.length} comments</a>
+          <p class="film-card__description">${shortDescription}</p>
+          <a class="film-card__comments">${commentsAmount} comments</a>
           <form class="film-card__controls">
             ${watchlistButton}
             ${watchedButton}
@@ -58,15 +67,20 @@ const createFilmCardTemplate = (film, comments) => {
   );
 };
 
-export default class FilmCard extends AbstractComponent {
-  constructor(film, comments) {
+export default class FilmCard extends AbstractSmartComponent {
+  constructor(film) {
     super();
     this._film = film;
-    this._comments = comments;
+    this._commentsAmount = film.comments.length;
+
+    this.openPopupClickHandler = null;
+    this.watchlistButtonCLickHandler = null;
+    this.watchedButtonClickHandler = null;
+    this.favoriteButtonClickHandler = null;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this._film, this._comments);
+    return createFilmCardTemplate(this._film, this._commentsAmount);
   }
 
   setOpenPopupClickHandler(handler) {
@@ -79,20 +93,40 @@ export default class FilmCard extends AbstractComponent {
     filmClickedElements.forEach((filmClickElement) => {
       filmClickElement.addEventListener(`click`, handler);
     });
+
+    this.openPopupClickHandler = handler;
   }
 
   setAddWatchlistButtonCLickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
       .addEventListener(`click`, handler);
+
+    this.watchlistButtonCLickHandler = handler;
   }
 
   setWatchedButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
       .addEventListener(`click`, handler);
+
+    this.watchedButtonClickHandler = handler;
   }
 
   setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, handler);
+
+    this.favoriteButtonClickHandler = handler;
+  }
+
+  updateCommentsAmount(newCommentsAmount) {
+    this._commentsAmount = newCommentsAmount;
+    this.rerender();
+  }
+
+  recoveryListeners() {
+    this.setOpenPopupClickHandler(this.openPopupClickHandler);
+    this.setAddWatchlistButtonCLickHandler(this.watchlistButtonCLickHandler);
+    this.setWatchedButtonClickHandler(this.watchedButtonClickHandler);
+    this.setFavoriteButtonClickHandler(this.favoriteButtonClickHandler);
   }
 }

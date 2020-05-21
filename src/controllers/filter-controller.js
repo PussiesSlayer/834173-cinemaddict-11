@@ -40,11 +40,11 @@ export default class FilterController {
     }
   }
 
-  setFilterClickHandler(handler) {
-    this._filterComponent.setFilterClickHandler(handler);
-  }
-
   _onFilterChange(filterType) {
+    if (this._activeFilterType === filterType) {
+      return;
+    }
+
     this._filmsModel.setFilter(filterType);
     this._activeFilterType = filterType;
     this.render();

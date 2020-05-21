@@ -24,31 +24,48 @@ const API = class {
 
   getFilms() {
     return this._load({url: `movies`})
-      .then(checkStatus)
       .then((response) => response.json())
       .then(Film.parseFilms);
   }
 
-  getComments(id) {
-    return this._load({url: `comments/${id}`})
+  getComments(film) {
+    return this._load({url: `comments/${film.id}`})
       .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then((data) => Comment.parseComments(data, film.id));
   }
 
   updateFilm(id, data) {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-    headers.append(`Content-Type`, `application/json`);
-
     return this._load({
       url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRaw()),
       headers: new Headers({"Content-Type": `application/json`}),
     })
-      .then(checkStatus)
       .then((response) => response.json())
       .then(Film.parseFilm);
+  }
+
+  createComment(comment, filmId) {
+    return this._load({
+      url: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(comment.toRaw()),
+      headers: new Headers({"Content-Type": `application/json`}),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        return {
+          movie: Film.parseFilm(data.movie),
+          comments: Comment.parseComments(data.comments, filmId),
+        };
+      });
+  }
+
+  deleteComment(comment) {
+    return this._load({
+      url: `comments/${comment.id}`,
+      method: Method.DELETE
+    });
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

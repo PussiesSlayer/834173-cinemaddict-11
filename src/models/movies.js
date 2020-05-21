@@ -1,18 +1,24 @@
 import {getFilmsByFilter} from "../utils/filter";
-import {FilterType} from "../consts";
+import {FilterType, SortType} from "../consts";
+import {getSortedFilms} from "../utils/sort";
 
 export default class Movies {
   constructor() {
     this._films = [];
 
     this._activeFilterType = FilterType.ALL;
+    this._currentSortType = SortType.DEFAULT;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+    this._sortingChangeHandlers = [];
+    this._dataLoadHandlers = [];
   }
 
   getFilms() {
-    return getFilmsByFilter(this._films, this._activeFilterType);
+    const filteredFilms = getFilmsByFilter(this._films, this._activeFilterType);
+
+    return getSortedFilms(filteredFilms, this._currentSortType);
   }
 
   getFilmsAll() {
@@ -20,7 +26,8 @@ export default class Movies {
   }
 
   setFilms(films) {
-    this._films = Array.from(films);
+    this._films = films;
+    this._callHandlers(this._dataLoadHandlers);
     this._callHandlers(this._dataChangeHandlers);
   }
 
@@ -42,13 +49,26 @@ export default class Movies {
     this._dataChangeHandlers.push(handler);
   }
 
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
+  }
+
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
 
-  setFilter(filterType) {
-    this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
+  setSortType(sortType) {
+    this._currentSortType = sortType;
+    this._callHandlers(this._sortingChangeHandlers);
+  }
+
+  setSortChangeHandler(handler) {
+    this._sortingChangeHandlers.push(handler);
+  }
+
+  setDataLoadHandler(handler) {
+    this._dataLoadHandlers.push(handler);
   }
 
   _callHandlers(handlers) {

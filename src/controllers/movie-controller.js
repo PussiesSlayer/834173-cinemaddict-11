@@ -10,10 +10,8 @@ const PopupStatus = {
   HIDE: `hide`,
 };
 
-// TODO: При смене статуса в попапе комментарии исчезают
-
-const renderComments = (commentsContainer, comments, onCommentsDataChange) => {
-  const commentsController = new CommentsController(commentsContainer, onCommentsDataChange);
+const renderComments = (commentsContainer, comments, onCommentsDataChange, film) => {
+  const commentsController = new CommentsController(commentsContainer, onCommentsDataChange, film);
 
   commentsController.render(comments);
 
@@ -25,6 +23,7 @@ export default class MovieController {
     this._container = container;
 
     this._api = api;
+    this._film = null;
 
     this._filmPopupComponent = null;
     this._filmComponent = null;
@@ -35,8 +34,6 @@ export default class MovieController {
 
     this._commentsModel = new CommentsModel();
 
-    this._comments = null;
-
     this._mode = PopupStatus.HIDE;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -46,78 +43,66 @@ export default class MovieController {
   }
 
   render(film) {
+    this._film = film;
+    const oldFlmComponent = this._filmComponent;
+    const oldFilmPopupComponent = this._filmPopupComponent;
 
-    // TODO: создать компонент ошибки. При неудачной загрузке комментариев выводить об этом ошибку
-    // TODO: Комментарии. Переделать парсеФромДате;
+    this._filmPopupComponent = new FilmPopupComponent(film);
+    this._filmComponent = new FilmCardComponent(film);
 
-    this._api.getComments(film.id)
-      .then((comments) => {
-        this._commentsModel.setComments(comments);
-        this._comments = this._commentsModel.getComments();
+    this._filmComponent.setOpenPopupClickHandler(() => {
+      this._showFilmPopup();
+      document.addEventListener(`keydown`, this._onEscKeyDown);
 
-        const oldFlmComponent = this._filmComponent;
-        const oldFilmPopupComponent = this._filmPopupComponent;
+      this._updateComments(film);
+    });
 
-        this._filmPopupComponent = new FilmPopupComponent(film);
-        this._filmComponent = new FilmCardComponent(film, this._commentsModel.getComments());
+    this._filmPopupComponent.setCloseButtonClickHandler(() => {
+      this._hideFilmPopup();
+      this._removeComments();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    });
 
-        this._filmComponent.setOpenPopupClickHandler(() => {
-          this._showFilmPopup();
-          document.addEventListener(`keydown`, this._onEscKeyDown);
+    const changeWatchlistStatus = () => {
+      const newFilm = FilmModel.clone(film);
 
-          this._updateComments(this._comments);
-        });
+      newFilm.isWantToWatch = !newFilm.isWantToWatch;
 
-        this._filmPopupComponent.setCloseButtonClickHandler(() => {
-          this._hideFilmPopup();
-          this._removeComments();
-          document.removeEventListener(`keydown`, this._onEscKeyDown);
-        });
+      this._onDataChange(film, newFilm);
+    };
 
-        const changeWatchlistStatus = () => {
-          const newFilm = FilmModel.clone(film);
+    const changeWatchedStatus = () => {
+      const newFilm = FilmModel.clone(film);
 
-          newFilm.isWantToWatch = !newFilm.isWantToWatch;
+      newFilm.isWatched = !newFilm.isWatched;
 
-          this._onDataChange(film, newFilm);
+      this._onDataChange(film, newFilm);
+    };
 
-          this._updateComments(this._comments);
-        };
+    const changeFavoriteStatus = () => {
+      const newFilm = FilmModel.clone(film);
 
-        const changeWatchedStatus = () => {
-          const newFilm = FilmModel.clone(film);
+      newFilm.isFavorite = !newFilm.isFavorite;
 
-          newFilm.isWatched = !newFilm.isWatched;
+      this._onDataChange(film, newFilm);
+    };
 
-          this._onDataChange(film, newFilm);
+    this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
+    this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
+    this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
+    this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
+    this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
+    this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
 
-          this._updateComments(this._comments);
-        };
-
-        const changeFavoriteStatus = () => {
-          const newFilm = FilmModel.clone(film);
-
-          newFilm.isFavorite = !newFilm.isFavorite;
-
-          this._onDataChange(film, newFilm);
-
-          this._updateComments(this._comments);
-        };
-
-        this._filmComponent.setAddWatchlistButtonCLickHandler(changeWatchlistStatus);
-        this._filmComponent.setWatchedButtonClickHandler(changeWatchedStatus);
-        this._filmComponent.setFavoriteButtonClickHandler(changeFavoriteStatus);
-        this._filmPopupComponent.setAddWatchlistCheckboxChangeHandler(changeWatchlistStatus);
-        this._filmPopupComponent.setWatchedCheckboxChangeHandler(changeWatchedStatus);
-        this._filmPopupComponent.setFavoriteCheckboxChangeHandler(changeFavoriteStatus);
-
-        if (oldFlmComponent && oldFilmPopupComponent) {
-          replace(this._filmComponent, oldFlmComponent);
-          replace(this._filmPopupComponent, oldFilmPopupComponent);
-        } else {
-          render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
-        }
-      });
+    if (oldFlmComponent && oldFilmPopupComponent) {
+      replace(this._filmComponent, oldFlmComponent);
+      replace(this._filmPopupComponent, oldFilmPopupComponent);
+      if (this._mode === PopupStatus.SHOW) {
+        this._updateComments(film);
+      }
+    } else {
+      render(this._container, this._filmComponent, RenderPosition.BEFOREEND);
+    }
   }
 
   destroy() {
@@ -154,8 +139,7 @@ export default class MovieController {
   _renderComments(comments) {
     const filmPopup = this._filmPopupComponent.getElement();
     const commentsContainer = filmPopup.querySelector(`.form-details__bottom-container`);
-
-    this._commentsController = renderComments(commentsContainer, comments, this._onCommentsDataChange);
+    this._commentsController = renderComments(commentsContainer, comments, this._onCommentsDataChange, this._film);
   }
 
   _removeComments() {
@@ -167,9 +151,12 @@ export default class MovieController {
     this._commentsController = null;
   }
 
-  _updateComments(comments) {
+  _updateComments(film) {
     this._removeComments();
-    this._renderComments(comments);
+    this._api.getComments(film)
+      .then((comments) => {
+        this._renderComments(comments);
+      });
   }
 
   _onEscKeyDown(evt) {
@@ -182,13 +169,40 @@ export default class MovieController {
     }
   }
 
-  _onCommentsDataChange(oldData, newData) {
+  _updateCommentsAmountAfterDelete(film, id) {
+    film.removeComment(id);
+
+    this._filmComponent.updateCommentsAmount(film.comments.length);
+  }
+
+  updateCommentsAmountAfterAdd(film, id) {
+    film.addComment(id);
+    this._filmComponent.updateCommentsAmount(film.comments.length);
+  }
+
+  _onCommentsDataChange(commentsController, film, oldData, newData) {
     if (oldData === null) {
-      this._commentsModel.addComment(newData);
-      this._updateComments(this._commentsModel.getComments());
-    } else if (newData === null) {
-      this._commentsModel.removeComment(oldData.id);
-      this._updateComments(this._commentsModel.getComments());
+      this._api.createComment(newData, film.id)
+        .then(() => {
+          this._commentsModel.addComment(newData);
+          this._updateComments(film);
+          this.updateCommentsAmountAfterAdd(film, newData.id);
+        })
+        .catch(() => {
+          commentsController.shakeForAdd();
+        });
+    } else
+    if (newData === null) {
+      this._api.deleteComment(oldData)
+        .then(() => {
+          this._commentsModel.removeComment(oldData.id);
+          this._updateComments(film);
+
+          this._updateCommentsAmountAfterDelete(film, oldData.id);
+        })
+        .catch(() => {
+          commentsController.shakeForDelete();
+        });
     }
   }
 }

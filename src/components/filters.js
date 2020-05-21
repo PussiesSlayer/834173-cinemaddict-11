@@ -41,17 +41,13 @@ export default class Filters extends AbstractComponent {
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
-      if (evt.target.tagName !== `A` && evt.target.tagName !== `SPAN`) {
+      if (evt.target.tagName !== `A` && evt.target.parentElement.tagName !== `A`) {
         return;
       }
 
-      const filterName = evt.target.dataset.filterType;
+      const filterName = evt.target.tagName === `A` ? evt.target.dataset.filterType : evt.target.parentElement.dataset.filterType;
+
       handler(filterName);
     });
-  }
-
-  setFilterClickHandler(handler) {
-    this.getElement().addEventListener(`click`, handler);
-    this._filterClickHandler = handler;
   }
 }

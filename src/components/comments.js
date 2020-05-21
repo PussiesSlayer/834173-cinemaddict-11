@@ -45,7 +45,7 @@ const createInstallEmojiMarkup = (emogies, chosenEmoji) => {
     }).join(`\n`);
 };
 
-const createNewCommentMarkup = (chosenEmoji, formIsAvailable, commentText) => {
+const createNewCommentMarkup = (chosenEmoji, commentText) => {
   const installingEmojiMarkup = createInstallEmojiMarkup(EMOGIES, chosenEmoji);
 
   return (
@@ -55,7 +55,7 @@ const createNewCommentMarkup = (chosenEmoji, formIsAvailable, commentText) => {
           </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${formIsAvailable ? `` : `disabled`}>${commentText}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"}>${commentText}</textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -66,10 +66,10 @@ const createNewCommentMarkup = (chosenEmoji, formIsAvailable, commentText) => {
 };
 
 const createCommentsTemplate = (comments, options = {}) => {
-  const {chosenEmoji, formIsAvailable, commentText} = options;
+  const {chosenEmoji, commentText} = options;
 
   const commentsMarkup = createCommentsMarkup(comments);
-  const newCommentMarkup = createNewCommentMarkup(chosenEmoji, formIsAvailable, commentText);
+  const newCommentMarkup = createNewCommentMarkup(chosenEmoji, commentText);
 
   return (
     `<section class="film-details__comments-wrap">
@@ -92,7 +92,6 @@ export default class Comments extends AbstractSmartComponent {
     this._comments = comments;
     this._chosenEmoji = null;
     this._commentText = ``;
-    this._formIsAvailable = true;
 
     this._deleteButtonCLickHandler = null;
 
@@ -110,7 +109,6 @@ export default class Comments extends AbstractSmartComponent {
   getTemplate() {
     return createCommentsTemplate(this._comments, {
       chosenEmoji: this._chosenEmoji,
-      formIsAvailable: this._formIsAvailable,
       commentText: this._commentText,
     });
   }
@@ -225,12 +223,14 @@ export default class Comments extends AbstractSmartComponent {
   }
 
   disabledForm() {
-    this._formIsAvailable = false;
-    this.rerender();
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+
+    comment.disabled = true;
   }
 
   enableForm() {
-    this._formIsAvailable = true;
-    this.rerender();
+    const comment = this.getElement().querySelector(`.film-details__comment-input`);
+
+    comment.disabled = false;
   }
 }

@@ -53,11 +53,11 @@ export default class CommentsController {
   shakeForAdd() {
     const newCommentForm = this._commentsComponent.getElement().querySelector(`.film-details__new-comment`);
     newCommentForm.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000 }s`;
+    this._commentsComponent.addError();
 
     setTimeout(() => {
       this._commentsComponent.getElement().style.animation = ``;
       this._commentsComponent.enableForm();
-      this._commentsComponent.addError();
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 

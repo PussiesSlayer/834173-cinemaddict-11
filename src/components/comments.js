@@ -45,7 +45,7 @@ const createInstallEmojiMarkup = (emogies, chosenEmoji) => {
     }).join(`\n`);
 };
 
-const createNewCommentMarkup = (chosenEmoji) => {
+const createNewCommentMarkup = (chosenEmoji, formIsAvailable) => {
   const installingEmojiMarkup = createInstallEmojiMarkup(EMOGIES, chosenEmoji);
 
   return (
@@ -55,7 +55,7 @@ const createNewCommentMarkup = (chosenEmoji) => {
           </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${formIsAvailable ? `` : `disabled`}></textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -66,10 +66,10 @@ const createNewCommentMarkup = (chosenEmoji) => {
 };
 
 const createCommentsTemplate = (comments, options = {}) => {
-  const {chosenEmoji} = options;
+  const {chosenEmoji, formIsAvailable} = options;
 
   const commentsMarkup = createCommentsMarkup(comments);
-  const newCommentMarkup = createNewCommentMarkup(chosenEmoji);
+  const newCommentMarkup = createNewCommentMarkup(chosenEmoji, formIsAvailable);
 
   return (
     `<section class="film-details__comments-wrap">
@@ -91,6 +91,7 @@ export default class Comments extends AbstractSmartComponent {
 
     this._comments = comments;
     this._chosenEmoji = null;
+    this._formIsAvailable = true;
 
     this._deleteButtonCLickHandler = null;
 
@@ -107,6 +108,7 @@ export default class Comments extends AbstractSmartComponent {
   getTemplate() {
     return createCommentsTemplate(this._comments, {
       chosenEmoji: this._chosenEmoji,
+      formIsAvailable: this._formIsAvailable,
     });
   }
 

@@ -26,7 +26,7 @@ const getTotalDuration = (watchedFilms) => {
 };
 
 const getGenresCounts = (watchedFilms) => {
-  let genresCount = {};
+  const genresCount = {};
 
   watchedFilms.map((film) => {
     film.genres.map((genre) => {

@@ -1,7 +1,7 @@
 import CommentsComponent from "../components/comments";
 import CommentModel from "../models/comment";
 import {remove, render, replace, RenderPosition} from "../utils/render";
-import {SHAKE_ANIMATION_TIMEOUT} from "../consts";
+import {DefaultData, SendingData, SHAKE_ANIMATION_TIMEOUT} from "../consts";
 import {encode} from "he";
 
 const parseFormData = (formData) => {
@@ -30,6 +30,9 @@ export default class CommentsController {
 
     this._commentsComponent.setDeleteButtonClickHandler((evt, i) => {
       evt.preventDefault();
+
+      setTimeout(this._commentsComponent.setData(SendingData.deleteButtonText), 10000);
+
       this._onCommentsDataChange(this, this._film, comments[i], null);
     });
 
@@ -66,6 +69,7 @@ export default class CommentsController {
 
     setTimeout(() => {
       //РАЗБЛОКИРОВАТЬ КОПКИ УДАЛЕНИЯ
+      this._commentsComponent.setData(DefaultData.deleteButtonText);
       this._commentsComponent.getElement().style.animation = ``;
     }, SHAKE_ANIMATION_TIMEOUT);
   }

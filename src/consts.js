@@ -8,6 +8,14 @@ export const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const EMOGIES = [`angry`, `puke`, `sleeping`, `smile`];
 
+export const DefaultData = {
+  deleteButtonText: `Delete`,
+};
+
+export const SendingData = {
+  deleteButtonText: `Deleting...`,
+};
+
 export const SortType = {
   DEFAULT: `default`,
   RATING: `rating`,

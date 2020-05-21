@@ -63,7 +63,8 @@ const API = class {
 
   deleteComment(comment) {
     return this._load({
-      url: `comments/${comment.id}`,
+      // url: `comments/${comment.id}`,
+      url: `commets/${comment.id}`,
       method: Method.DELETE
     });
   }

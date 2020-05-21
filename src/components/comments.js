@@ -1,8 +1,10 @@
 import AbstractSmartComponent from "./abstract-smart-component";
 import {formatDateOfComment} from "../utils/common";
-import {EMOGIES} from "../consts";
+import {EMOGIES, DefaultData, SendingData} from "../consts";
 
 const createCommentsMarkup = (comments) => {
+  const deleteButtonText = DefaultData.deleteButtonText;
+
   return comments
     .map((comment) => {
       const commentDate = formatDateOfComment(comment.date);
@@ -17,7 +19,7 @@ const createCommentsMarkup = (comments) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.userName}</span>
                 <span class="film-details__comment-day">${commentDate}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button class="film-details__comment-delete">${deleteButtonText}</button>
               </p>
             </div>
           </li>
@@ -66,9 +68,10 @@ const createNewCommentMarkup = (chosenEmoji, commentText) => {
 };
 
 const createCommentsTemplate = (comments, options = {}) => {
-  const {chosenEmoji, commentText} = options;
+  const {chosenEmoji, commentText, externalData} = options;
 
-  const commentsMarkup = createCommentsMarkup(comments);
+  const commentsMarkup = createCommentsMarkup(comments, {externalData});
+
   const newCommentMarkup = createNewCommentMarkup(chosenEmoji, commentText);
 
   return (
@@ -118,6 +121,12 @@ export default class Comments extends AbstractSmartComponent {
     this._setTextareaChangeHandler();
     this.setDeleteButtonClickHandler(this._deleteButtonCLickHandler);
     this.setSubmitHandler(this._submitInitialHandler);
+  }
+
+  setData(data) {
+    const deleteButton = this.getElement().querySelector(`.film-details__comment-delete`);
+
+    deleteButton.textContent = data;
   }
 
   rerender() {

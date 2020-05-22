@@ -55,7 +55,7 @@ const API = class {
       .then((response) => response.json())
       .then((data) => {
         return {
-          movie: Film.parseFilm(data.movie),
+          movie: Film.parse(data.movie),
           comments: Comment.parseAll(data.comments, filmId),
         };
       });

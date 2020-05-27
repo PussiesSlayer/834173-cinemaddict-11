@@ -15,4 +15,12 @@ export default class Provider {
   updateFilm(id, data) {
     return this._api.updateFilm(id, data);
   }
+
+  createComment(comment, filmId) {
+    return this._api.createComment(comment, filmId);
+  }
+
+  deleteComment(comment) {
+    return this._api.deleteComment(comment);
+  }
 }

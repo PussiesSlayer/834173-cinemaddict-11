@@ -9,7 +9,7 @@ import FilterController from "./controllers/filter-controller";
 import SortingController from "./controllers/sorting-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render, remove} from "./utils/render";
-import API from "./api";
+import API from "./api/index";
 import {MenuItem} from "./consts";
 
 const siteMainElement = document.querySelector(`.main`);

@@ -13,6 +13,7 @@ import API from "./api/index";
 import Provider from "./api/provider";
 import Store from "./api/store";
 import {MenuItem} from "./consts";
+import {getStoreName} from "./utils/common";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);
@@ -20,13 +21,14 @@ const footerElement = document.querySelector(`.footer`);
 
 const AUTHORIZATION = `Basic erdfgjbhknlms;efs`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
-const STORE_PREFIX = `cinemaadict-localstorage`;
+const STORE_PREFIX_FILM = `film`;
+const STORE_PREFIX_COMMENTS = `comments`;
 const STORE_VER = `v1`;
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new API(END_POINT, AUTHORIZATION);
-const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
+const filmStore = new Store(getStoreName(STORE_PREFIX_FILM, STORE_VER), window.localStorage);
+const commentsStore = new Store(getStoreName(STORE_PREFIX_COMMENTS, STORE_VER), window.localStorage);
+const apiWithProvider = new Provider(api, filmStore, commentsStore);
 
 const siteMenuElement = new MenuComponent();
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);

@@ -36,7 +36,7 @@ self.addEventListener(`activate`, (evt) => {
       .then(
         (keys) => Promise.all(
           keys.map((key) => {
-            if (ley.startsWith(CACHE_PREFIX) && key !== CACHE_NAME) {
+            if (key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME) {
               return caches.delete(key);
             }
 

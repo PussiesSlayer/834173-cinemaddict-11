@@ -1,26 +1,105 @@
+import Film from "../models/movie";
+import Comment from "../models/comment";
+import store from "./store";
+
+const isOnline = () => {
+  return window.navigator.onLine;
+};
+
 export default class Provider {
-  constructor(api, storage) {
+  constructor(api, filmStore, commentStore) {
     this._api = api;
-    this._storage = storage;
+    this._filmStore = filmStore;
+    this._commentStore = commentStore;
+
+    this._offlineChangedFilms = new Set();
   }
 
   getFilms() {
-    return this._api.getFilms();
+    if (isOnline()) {
+      return this._api.getFilms()
+        .then((films) => {
+          const items = films.reduce((acc, current) => {
+            return Object.assign({}, acc, {
+              [current.id]: current.toRaw(),
+            });
+          }, {});
+
+          this._filmStore.setAllItems(items);
+
+          return films;
+        });
+    }
+
+    const storeFilms = Object.values(this._filmStore.getItems());
+
+    return Promise.resolve(Film.parseAll(storeFilms));
   }
 
   getComments(film) {
-    return this._api.getComments(film);
+    if (isOnline()) {
+      return this._api.getComments(film)
+        .then((comments) => {
+          this._commentStore.setItem(film.id, comments.map((comment) => comment.toRaw()));
+
+          return comments;
+        });
+    }
+
+    const storeComments = this._commentStore.getItems()[film.id];
+
+    return Promise.resolve(Comment.parseAll(storeComments, film.id));
   }
 
   updateFilm(id, data) {
-    return this._api.updateFilm(id, data);
+    if (isOnline()) {
+      return this._api.updateFilm(id, data)
+        .then((newFilm) => {
+          this._filmStore.setItem(newFilm.id, newFilm.toRaw());
+
+          return newFilm;
+        });
+    }
+
+    const localFilm = Film.clone(data);
+    this._filmStore.setItem(id, data.toRaw());
+    this._offlineChangedFilms.add(id);
+
+    return Promise.resolve(localFilm);
   }
 
   createComment(comment, filmId) {
-    return this._api.createComment(comment, filmId);
+    if (isOnline()) {
+      return this._api.createComment(comment, filmId)
+        .then((result) => {
+          this._filmStore.setItem(filmId, result.comments.map((item) => item.toRaw()));
+
+          this._commentStore.setItem(result.movie.id, result.movie.toRaw());
+
+          return result;
+        });
+    }
+
+    return Promise.reject(`You can't create comment in offline`);
   }
 
   deleteComment(comment) {
-    return this._api.deleteComment(comment);
+    if (isOnline()) {
+      return this._api.deleteComment(comment)
+        .then(() => {
+          const storeComments = this._commentStore.getItems()[comment.filmId]
+            .filter((rawComment) => rawComment[`id`] !== comment.id);
+
+          this._commentStore.setItem(comment.filmId, storeComments);
+
+          const storeFilm = this._filmStore.getItems()[comment.filmId];
+          const storeCommentsByFilm = storeFilm[`comments`];
+
+          storeFilm[`comments`] = storeCommentsByFilm.filter((id) => id !== comment.id);
+          this._filmStore.setItem(comment.id, storeFilm);
+        });
+    }
+
+    return Promise.reject(`You can't delete comments in offline`);
   }
 }

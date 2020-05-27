@@ -13,19 +13,21 @@ export default class Store {
   }
 
   setItem(key, value) {
+    this.setItems({[key]: value});
+  }
+
+  setItems(items) {
     const store = this.getItems();
 
     this._storage.setItem(
         this._storageKey,
         JSON.stringify(
-            Object.assign({}, store, {
-              [key]: value
-            })
+            Object.assign({}, store, items)
         )
     );
   }
 
-  setItems(items) {
+  setAllItems(items) {
     this._storage.setItem(
         this._storageKey,
         JSON.stringify(items)

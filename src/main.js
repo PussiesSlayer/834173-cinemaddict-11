@@ -9,8 +9,11 @@ import FilterController from "./controllers/filter-controller";
 import SortingController from "./controllers/sorting-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render, remove} from "./utils/render";
-import API from "./api";
+import API from "./api/index";
+import Provider from "./api/provider";
+import Store from "./api/store";
 import {MenuItem} from "./consts";
+import {getStoreName} from "./utils/common";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.header`);
@@ -18,8 +21,14 @@ const footerElement = document.querySelector(`.footer`);
 
 const AUTHORIZATION = `Basic erdfgjbhknlms;efs`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX_FILM = `film`;
+const STORE_PREFIX_COMMENTS = `comments`;
+const STORE_VER = `v1`;
 
 const api = new API(END_POINT, AUTHORIZATION);
+const filmStore = new Store(getStoreName(STORE_PREFIX_FILM, STORE_VER), window.localStorage);
+const commentsStore = new Store(getStoreName(STORE_PREFIX_COMMENTS, STORE_VER), window.localStorage);
+const apiWithProvider = new Provider(api, filmStore, commentsStore);
 
 const siteMenuElement = new MenuComponent();
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
@@ -40,7 +49,7 @@ const filmsBlock = new FilmsBlockComponent();
 const loadingComponent = new LoadingComponent();
 render(filmsBlock.getElement(), loadingComponent, RenderPosition.AFTERBEGIN);
 
-const pageController = new PageController(filmsBlock, filmsModel, api);
+const pageController = new PageController(filmsBlock, filmsModel, apiWithProvider);
 
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
@@ -76,7 +85,7 @@ filmsModel.setDataChangeHandlers(() => {
   statisticComponent.setRank(filmsModel.getAll());
 });
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(films);
   })
@@ -87,3 +96,19 @@ api.getFilms()
     remove(loadingComponent);
     pageController.render();
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  if (!apiWithProvider.isSync()) {
+    apiWithProvider.sync();
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

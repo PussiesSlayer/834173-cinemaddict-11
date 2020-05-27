@@ -48,3 +48,7 @@ export const getUserRank = (amount) => {
 
   return rank;
 };
+
+export const getStoreName = (prefix, version) => {
+  return `cinemaadict-${prefix}-localstorage-${version}`;
+};

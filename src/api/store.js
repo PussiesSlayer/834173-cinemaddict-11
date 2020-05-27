@@ -31,4 +31,15 @@ export default class Store {
         JSON.stringify(items)
     );
   }
+
+  // removeItem(key) {
+  //   const store = this.getItems();
+  //
+  //   delete store[key];
+  //
+  //   this._storage.setItem(
+  //       this._storeKey,
+  //       JSON.stringify(store)
+  //   );
+  // }
 }

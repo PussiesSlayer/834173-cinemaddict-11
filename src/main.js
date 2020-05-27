@@ -10,6 +10,8 @@ import SortingController from "./controllers/sorting-controller";
 import FilmsModel from "./models/movies";
 import {RenderPosition, render, remove} from "./utils/render";
 import API from "./api/index";
+import Provider from "./api/provider";
+import Store from "./api/store";
 import {MenuItem} from "./consts";
 
 const siteMainElement = document.querySelector(`.main`);
@@ -18,8 +20,13 @@ const footerElement = document.querySelector(`.footer`);
 
 const AUTHORIZATION = `Basic erdfgjbhknlms;efs`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+const STORE_PREFIX = `cinemaadict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const api = new API(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const siteMenuElement = new MenuComponent();
 render(siteMainElement, siteMenuElement, RenderPosition.BEFOREEND);
@@ -40,7 +47,7 @@ const filmsBlock = new FilmsBlockComponent();
 const loadingComponent = new LoadingComponent();
 render(filmsBlock.getElement(), loadingComponent, RenderPosition.AFTERBEGIN);
 
-const pageController = new PageController(filmsBlock, filmsModel, api);
+const pageController = new PageController(filmsBlock, filmsModel, apiWithProvider);
 
 render(siteMainElement, filmsBlock, RenderPosition.BEFOREEND);
 
@@ -76,7 +83,7 @@ filmsModel.setDataChangeHandlers(() => {
   statisticComponent.setRank(filmsModel.getAll());
 });
 
-api.getFilms()
+apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.set(films);
   })

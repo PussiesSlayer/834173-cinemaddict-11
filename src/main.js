@@ -87,3 +87,7 @@ api.getFilms()
     remove(loadingComponent);
     pageController.render();
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});

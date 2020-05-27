@@ -72,7 +72,7 @@ const API = class {
     return this._load({
       url: `movies/sync`,
       method: Method.POST,
-      body: JSON.stringify(data.toRaw()),
+      body: JSON.stringify(data),
       headers: new Headers({"Content-Type": `application/json`}),
     })
       .then((response) => response.json());

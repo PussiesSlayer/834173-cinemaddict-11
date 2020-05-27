@@ -102,4 +102,31 @@ export default class Provider {
 
     return Promise.reject(`You can't delete comments in offline`);
   }
+
+  isSync() {
+    return this._offlineChangedFilms === 0;
+  }
+
+  sync() {
+    if (isOnline()) {
+      const storeFilms = this._filmStore.getItems();
+      const storeChangedFilms = Array.from(this._offlineChangedFilms)
+        .map((id) => storeFilms[id]);
+
+      return this._api.sync(storeChangedFilms)
+        .then((response) => {
+          const items = response.updated.reduce((acc, current) => {
+            return Object.assign({}, acc, {
+              [current.id]: current,
+            });
+          }, {});
+
+          this._filmStore.setItems(items);
+
+          this._offlineChangedFilms.clear();
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
+  }
 }
